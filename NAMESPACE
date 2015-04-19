@@ -1,0 +1,21 @@
+useDynLib(kknn)
+
+importFrom(Matrix, sparseMatrix, Diagonal, rowSums)
+importFrom(igraph, graph, decompose.graph, arpack)
+importFrom(stats, AIC, logLik, reorder, update) 
+
+export(simulation, kknn, train.kknn, cv.kknn, kknn.dist, contr.dummy, contr.metric, contr.ordinal, specClust)
+
+S3method('plot', train.kknn)
+S3method('predict', kknn)
+S3method('predict', train.kknn)
+S3method('print', kknn)
+S3method('print', train.kknn)
+S3method('summary', kknn)
+S3method('summary', train.kknn)
+
+S3method('plot', specClust)
+
+
+
+

@@ -1,0 +1,125 @@
+            CHANGES IN KKNN VERSION 1.2-5
+
+BUG FIXES
+
+    o a browser() sneaked into kknn 
+
+
+            CHANGES IN KKNN VERSION 1.2-4
+
+NEW FEATURES
+
+    o new function kknn.dist
+
+OTHER CHANGES
+
+    o kknn returns now an index matrix of nearest neighbors
+
+
+
+            CHANGES IN KKNN VERSION 1.2-3
+
+BUG FIXES
+
+    o Namespace changed  
+
+
+
+            CHANGES IN KKNN VERSION 1.2-2
+
+NEW FEATURES
+
+    o kknn has new parameter scale to switch off scaling   
+
+    o new function cv.kknn for k-fold cross validation,
+    
+      replacing the function simulation in future  
+
+    o default kernel changed to optimal
+
+BUG FIXES
+
+    o interaction terms in formulas should be handled correctly 
+
+OTHER CHANGES
+
+    o speeded up kknn code a bit and reduced some memory allocations
+
+
+
+            CHANGES IN KKNN VERSION 1.2-1
+
+BUG FIXES
+
+    o solved some namespace problems  
+
+
+
+            CHANGES IN KKNN VERSION 1.2-0
+
+NEW FEATURES
+
+    o added new kernel "optimal" to kknn Samworth (2012).             
+            
+
+
+            CHANGES IN KKNN VERSION 1.1-2
+
+BUG FIXES
+
+    o changed package to work with igraph >= 0.6  
+
+
+
+            CHANGES IN KKNN VERSION 1.1-1
+
+OTHER CHANGES
+
+    o computation of Eucledian distances is 3-5 times faster. 
+
+
+
+            CHANGES IN KKNN VERSION 1.1-0
+
+NEW FEATURES
+
+    o added spectral clustering function specClust. 
+
+
+OTHER CHANGES
+
+    o computation of knn distances is much faster. 
+
+
+
+            CHANGES IN KKNN VERSION 1.0-8
+
+BUG FIXES
+
+    o the data.frame for the training data set does not have to contain the 
+      response variable (suggested by Carlos J. Gil Bellosta).  
+
+
+
+            CHANGES IN KKNN VERSION 1.0-5
+
+BUG FIXES
+
+    o A bug was fixed, leave-one-out crossvalidation now works fine.
+
+
+
+            CHANGES IN KKNN VERSION 1.0-3
+
+NEW FEATURES
+
+    o new parameter ykernel: Window width of an y-kernel, 
+      especially for prediction of ordinal classes.
+
+BUG FIXES
+
+    o A bug was fixed in the kernel="rank" in kknn.
+
+    o kernel  = "gaussian" did not work correctly: this has been fixed.
+
+
