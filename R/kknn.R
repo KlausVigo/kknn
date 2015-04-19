@@ -206,12 +206,12 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(), k
     if(Euclid) dmtmp <- .C("dmEuclid", as.double(learn), as.double(valid), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm=double((k+1L) * p), cl=integer((k+1L) * p), k=as.integer(k+1), 
-        as.double(distance),as.double(we), dup=FALSE, PACKAGE='kknn')
+        as.double(distance),as.double(we), PACKAGE='kknn')
 
     else dmtmp <- .C("dm", as.double(learn), as.double(valid), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm=double((k+1L) * p), cl=integer((k+1L) * p), k=as.integer(k+1), 
-        as.double(distance),as.double(we), dup=FALSE, PACKAGE='kknn')
+        as.double(distance),as.double(we), PACKAGE='kknn')
     
     D <- matrix(dmtmp$dm, nrow = p, ncol = k + 1)
     C <- matrix(dmtmp$cl, nrow = p, ncol = k + 1)
@@ -325,11 +325,11 @@ kknn.dist <- function(learn, valid, k = 10, distance = 2)
     if(Euclid) dmtmp <- .C("dmEuclid", as.double(learn), as.double(valid), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm=double(k * p), cl=integer(k * p), k=as.integer(k), 
-        as.double(distance),as.double(we), dup=FALSE, PACKAGE='kknn')
+        as.double(distance),as.double(we), PACKAGE='kknn')
     else dmtmp <- .C("dm", as.double(learn), as.double(valid), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm=double(k * p), cl=integer(k * p), k=as.integer(k), 
-        as.double(distance),as.double(we), dup=FALSE, PACKAGE='kknn')
+        as.double(distance),as.double(we), PACKAGE='kknn')
     D <- matrix(dmtmp$dm, nrow = p, ncol = k)
     C <- matrix(dmtmp$cl, nrow = p, ncol = k) + 1L
     list(C, D)
@@ -448,11 +448,11 @@ train.kknn = function (formula, data, kmax = 11, distance = 2, kernel = "optimal
     if(Euclid) dmtmp <- .C("dmEuclid", as.double(mm.data), as.double(mm.data), 
         as.integer(m), as.integer(p), as.integer(q), dm = double((kmax + 2L) * p), 
         cl = integer((kmax + 2L) * p), k = as.integer(kmax + 2), as.double(distance), 
-        as.double(we), dup=FALSE, PACKAGE = "kknn")
+        as.double(we), PACKAGE = "kknn")
     else dmtmp <- .C("dm", as.double(mm.data), as.double(mm.data), 
         as.integer(m), as.integer(p), as.integer(q), dm = double((kmax + 2L) * p), 
         cl = integer((kmax + 2L) * p), k = as.integer(kmax + 2), as.double(distance), 
-        as.double(we), dup=FALSE, PACKAGE = "kknn")
+        as.double(we), PACKAGE = "kknn")
     D <- matrix(dmtmp$dm, nrow = p, ncol = kmax + 2)
     C <- matrix(dmtmp$cl, nrow = p, ncol = kmax + 2)
     C <- C + 1
