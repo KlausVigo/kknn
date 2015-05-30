@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/KlausVigo/kknn.svg?branch=master)](https://travis-ci.org/KlausVigo/kknn)
+
 kknn
 ========================================================
 
