@@ -2,7 +2,9 @@ useDynLib(kknn)
 
 importFrom(Matrix, sparseMatrix, Diagonal, rowSums)
 importFrom(igraph, graph, decompose.graph, arpack)
-importFrom(stats, AIC, logLik, reorder, update) 
+importFrom(stats, AIC, logLik, reorder, update, rnorm, dnorm, qnorm, dbeta, predict, na.omit, kmeans,
+           model.frame, model.matrix, model.response, delete.response, as.formula, formula, terms, sd) 
+importFrom(graphics, plot, abline, matplot, par, legend, xinch, yinch)
 
 export(simulation, kknn, train.kknn, cv.kknn, kknn.dist, contr.dummy, contr.metric, contr.ordinal, specClust)
 
