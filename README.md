@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/KlausVigo/kknn.svg?branch=master)](https://travis-ci.org/KlausVigo/kknn)
-[![CRAN Status Badge](http://www.r-pkg.org/badges/version/kknn)](http://cran.r-project.org/web/packages/kknn/)
+[![CRAN Status Badge](http://www.r-pkg.org/badges/version/kknn)](http://cran.r-project.org/package=kknn)
 [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
-[![CRAN Downloads](http://cranlogs.r-pkg.org/badges/kknn)](http://cran.rstudio.com/web/packages/kknn/index.html)
+[![CRAN Downloads](http://cranlogs.r-pkg.org/badges/kknn)](http://cran.r-project.org/package=kknn)
 
 
 kknn
