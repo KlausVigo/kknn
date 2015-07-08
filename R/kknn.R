@@ -5,6 +5,7 @@
 
 simulation <- function(formula, data, runs = 10, train = TRUE, k = 11, ...)
 {
+   .Deprecated("train.kknn or cv.kknn", "kknn", old="simulation")
    mf <- model.frame(formula, data=data)
    y <- model.response(mf)
    MISCLASS<-numeric(runs)
@@ -101,7 +102,7 @@ contr.int <- function (n, contrasts = TRUE)
 {
     if (length(n) <= 1) {
         if (is.numeric(n) && length(n) == 1 && n > 1) 
-            levels <- 1:n
+            levels <- as.integer(1:n)
         else stop("contrasts are not defined for 0 degrees of freedom")
     }
     else levels <- n
@@ -661,3 +662,50 @@ cv.kknn <- function(formula, data, kcv = 10, ...)
   list(cbind(y=y, yhat=yhat), result)
 }
 
+
+prepare.Discrete <- function(data){
+  if(class(data)=="factor")return(as.matrix(unclass(data)))
+  if(class(data)=="data.frame")return(as.matrix(data.frame(lapply(data,unclass))))
+}
+
+
+kknn.dist2 <- function(learn, valid, learnD=NULL, validD=NULL, k = 10, distance = 2) 
+{
+  m <- dim(learn)[1]
+  p <- dim(valid)[1]
+  q <- dim(learn)[2]
+  
+  we <- rep(1.0, q)
+  ord = order(we * apply(learn, 2, sd), decreasing=TRUE)
+  
+  if(!is.null(validD)){
+    q2 <- dim(learnD)[2]
+    we2 <- rep(1.0, ncol(learnD))
+  } 
+  
+  learn = learn[,ord, drop=FALSE]
+  valid = valid[,ord, drop=FALSE]
+  
+  Euclid <- FALSE
+  if(distance==2) Euclid <- TRUE
+  if(Euclid){
+      if(is.null(learnD))
+      dmtmp <- .C("dmEuclid", as.double(learn), as.double(valid), 
+                         as.integer(m), as.integer(p), as.integer(q), 
+                         dm=double(k * p), cl=integer(k * p), k=as.integer(k), 
+                         as.double(distance),as.double(we), PACKAGE='kknn')
+      else dmtmp <- .C("dmEuclid2", as.double(learn), as.double(valid), 
+          as.integer(learnD), as.integer(validD),             
+          as.integer(m), as.integer(p), as.integer(q), as.integer(q2), 
+          dm=double(k * p), cl=integer(k * p), k=as.integer(k), 
+          as.double(distance), as.double(we), as.double(we2), PACKAGE='kknn')  
+#dmEuclid2( int *n, int *m, int *p, int *p2, double *dm, int *cl, int *k, double *mink, double *weights, double *weights2)
+  }
+  else dmtmp <- .C("dm", as.double(learn), as.double(valid), 
+                   as.integer(m), as.integer(p), as.integer(q), 
+                   dm=double(k * p), cl=integer(k * p), k=as.integer(k), 
+                   as.double(distance),as.double(we), PACKAGE='kknn')
+  D <- matrix(dmtmp$dm, nrow = p, ncol = k)
+  C <- matrix(dmtmp$cl, nrow = p, ncol = k) + 1L
+  list(C, D)
+}  

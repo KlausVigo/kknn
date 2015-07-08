@@ -7,7 +7,7 @@
 \alias{cv.kknn}
 \title{Training kknn}
 \description{
-  Training of kknn method via leave-one-out crossvalidation. 
+  Training of kknn method via leave-one-out (\code{train.kknn}) or k-fold (\code{cv.kknn}) crossvalidation. 
 }
 \usage{
 train.kknn(formula, data, kmax = 11, distance = 2, kernel = "optimal",
