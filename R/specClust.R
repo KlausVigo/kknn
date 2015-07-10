@@ -115,8 +115,8 @@ specClust <- function (data, centers=NULL, nn = 7, method = "symmetric", gmax=NU
     while(test){ 
         DC = mydist(data, nn)
         sif <- rbind(1:n, as.vector(DC[[2]]))
-        g <- graph(sif, directed=FALSE)        
-        g <- decompose.graph(g, min.vertices=4)
+        g <- graph(sif, directed=FALSE)   
+        g <- decompose(g, min.vertices=4)
         if (length(g) > 1) {
             #warning("graph not connected")
             if(length(g)>=gmax) nn = nn+2       
