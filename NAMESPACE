@@ -1,7 +1,7 @@
 useDynLib(kknn)
 
 importFrom(Matrix, sparseMatrix, Diagonal, rowSums)
-importFrom(igraph, graph, decompose.graph, arpack)
+importFrom(igraph, graph, decompose, arpack) # decompose.graph,
 importFrom(stats, AIC, logLik, reorder, update, rnorm, dnorm, qnorm, dbeta, predict, na.omit, kmeans,
            model.frame, model.matrix, model.response, delete.response, as.formula, formula, terms, sd) 
 importFrom(graphics, plot, abline, matplot, par, legend, xinch, yinch)
