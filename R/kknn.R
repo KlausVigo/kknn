@@ -357,18 +357,39 @@ summary.kknn <- function(object, ...)
 }
 
 
-predict.kknn <- function(object,...)return(object$fit)
+predict.kknn <- function(object, type = 'raw', ...) 
+{ 
+    pred <- switch(type, 
+        raw = object$fit,
+        prob = object$prob,
+        stop('invalid type for prediction'))
+    pred
+}
 
 
 predict.train.kknn <- function (object, newdata, ...) 
 {
     if (missing(newdata)) 
         return(object$fit)
-    res = kknn(formula(terms(object)), object$data, newdata, 
+    res <- kknn(formula(terms(object)), object$data, newdata, 
         k = object$best.parameters$k, kernel = object$best.parameters$kernel, 
         distance = object$distance)
-   return(predict(res))
+    return(predict(res, ...))
 }
+
+
+#predict.kknn <- function(object,...)return(object$fit)
+
+
+#predict.train.kknn <- function (object, newdata, ...) 
+#{
+#    if (missing(newdata)) 
+#        return(object$fit)
+#    res = kknn(formula(terms(object)), object$data, newdata, 
+#        k = object$best.parameters$k, kernel = object$best.parameters$kernel, 
+#        distance = object$distance)
+#   return(predict(res))
+#}
 
 
 train.kknn = function (formula, data, kmax = 11, distance = 2, kernel = "optimal", ykernel = NULL, scale=TRUE, 
