@@ -370,7 +370,8 @@ predict.kknn <- function(object, type = 'raw', ...)
 predict.train.kknn <- function (object, newdata, ...) 
 {
     if (missing(newdata)) 
-        return(object$fit)
+        return(predict(object, ...)) 
+    #    return(object$fit)
     res <- kknn(formula(terms(object)), object$data, newdata, 
         k = object$best.parameters$k, kernel = object$best.parameters$kernel, 
         distance = object$distance)

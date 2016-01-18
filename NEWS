@@ -2,6 +2,8 @@
 
 OTHER CHANGES
 
+    o predict got an additional argument "type"  
+    
     o changed igraph code to version >=1.0     
 
 
