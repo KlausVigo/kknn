@@ -10,7 +10,7 @@
   Training of kknn method via leave-one-out (\code{train.kknn}) or k-fold (\code{cv.kknn}) crossvalidation. 
 }
 \usage{
-train.kknn(formula, data, kmax = 11, distance = 2, kernel = "optimal",
+train.kknn(formula, data, kmax = 11, ks = NULL, distance = 2, kernel = "optimal",
 	ykernel = NULL, scale = TRUE, contrasts = c('unordered' = "contr.dummy",
 	ordered = "contr.ordinal"), ...)
 cv.kknn(formula, data, kcv = 10, ...)
@@ -18,7 +18,8 @@ cv.kknn(formula, data, kcv = 10, ...)
 \arguments{
 \item{formula}{A formula object.}
 \item{data}{Matrix or data frame. }
-\item{kmax}{Maximum number of k. }
+\item{kmax}{Maximum number of k, if \code{ks} is not specified.}
+\item{ks}{A vector specifying values of k. If not null, this takes precedence over \code{kmax}.}
 \item{distance}{Parameter of Minkowski distance.}
 \item{kernel}{Kernel to use. Possible choices are "rectangular" 
 	(which is standard unweighted knn), "triangular", "epanechnikov" 
