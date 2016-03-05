@@ -393,7 +393,7 @@ predict.train.kknn <- function (object, newdata, ...)
 #}
 
 
-train.kknn = function (formula, data, kmax = 11, distance = 2, kernel = "optimal", ykernel = NULL, scale=TRUE, 
+train.kknn = function (formula, data, kmax = 11, ks = NULL, distance = 2, kernel = "optimal", ykernel = NULL, scale=TRUE, 
     contrasts = c(unordered = "contr.dummy", ordered = "contr.ordinal"), ...) 
 {
 	if(is.null(ykernel)) ykernel=0
@@ -414,6 +414,15 @@ train.kknn = function (formula, data, kmax = 11, distance = 2, kernel = "optimal
     kernel <- match.arg(kernel, c("rectangular", "triangular", "epanechnikov", "biweight", 
         "triweight", "cos", "inv", "gaussian", "rank", "optimal"), TRUE)
     
+    if (is.null(ks)) {
+      ks <- 1:kmax
+      nk <- kmax
+    } else {
+      ks <- sort(ks)
+      nk <- length(ks)
+      kmax <- max(ks)
+    }
+    
     call <- match.call()
     mf <- model.frame(formula, data = data)
     mt <- attr(mf, "terms")
@@ -427,13 +436,13 @@ train.kknn = function (formula, data, kmax = 11, distance = 2, kernel = "optimal
     d <- sum(attr(mt, "order"))
 
     r <- length(kernel)
-    MISCLASS <- matrix(nrow = kmax, ncol = r, dimnames = list(c(1:kmax), 
+    MISCLASS <- matrix(nrow = nk, ncol = r, dimnames = list(ks, 
         kernel))
-    MEAN.ABS <- matrix(nrow = kmax, ncol = r, dimnames = list(c(1:kmax), 
+    MEAN.ABS <- matrix(nrow = nk, ncol = r, dimnames = list(ks, 
         kernel))
-    MEAN.SQU <- matrix(nrow = kmax, ncol = r, dimnames = list(c(1:kmax), 
+    MEAN.SQU <- matrix(nrow = nk, ncol = r, dimnames = list(ks, 
         kernel))
-    P <- list(kmax * r)
+    P <- list(nk * r)
     m <- dim(mm.data)[1]
     q <- dim(mm.data)[2]
     p <- m
@@ -499,7 +508,9 @@ train.kknn = function (formula, data, kmax = 11, distance = 2, kernel = "optimal
         l <- length(lev)
         weightClass <- matrix(0, m, l)
     }
-    for (j in 1:(kmax)) {
+
+    for (k_i in 1:nk) {
+        j <- ks[k_i]
         maxdist <- D[, j + 1]
         maxdist[maxdist < 1.0e-06] = 1.0e-06
         V <- D[, 1:j]/ maxdist # sapply(maxdist, "max", 1e-06)
@@ -564,21 +575,22 @@ train.kknn = function (formula, data, kmax = 11, distance = 2, kernel = "optimal
             }
             attr(fit, "kernel") = kernel[s]
             attr(fit, "k") = j
-            P[[j + (s - 1) * kmax]] = fit
+            P[[k_i + (s - 1) * nk]] = fit
 
         }
     }
 
-    for (j in 1:kmax) {
+    for (k_i in 1:nk) {
+        j <- ks[k_i]
         for (s in 1:r) {
             if (is.factor(y)) 
-                MISCLASS[j, s] <- sum(y != P[[j + (s - 1) * kmax]])/m
+                MISCLASS[k_i, s] <- sum(y != P[[k_i + (s - 1) * nk]])/m
             if (is.numeric(y) | is.ordered(y)) 
-                MEAN.ABS[j, s] <- sum(abs(as.numeric(y) - as.numeric(P[[j + 
-                  (s - 1) * kmax]])))/m
+                MEAN.ABS[k_i, s] <- sum(abs(as.numeric(y) - as.numeric(P[[k_i + 
+                  (s - 1) * nk]])))/m
             if (is.numeric(y) | is.ordered(y)) 
-                MEAN.SQU[j, s] <- sum((as.numeric(y) - as.numeric(P[[j + 
-                  (s - 1) * kmax]]))^2)/m
+                MEAN.SQU[k_i, s] <- sum((as.numeric(y) - as.numeric(P[[k_i + 
+                  (s - 1) * nk]]))^2)/m
         }
     }
     if (response == "nominal") 
@@ -587,8 +599,8 @@ train.kknn = function (formula, data, kmax = 11, distance = 2, kernel = "optimal
         best <- which(MEAN.ABS == min(MEAN.ABS), arr.ind = TRUE)
     if (response == "continuous") 
         best <- which(MEAN.SQU == min(MEAN.SQU), arr.ind = TRUE)
-    best.parameters = list(kernel = kernel[best[1, 2]], k = best[1, 
-        1])
+    best.parameters = list(kernel = kernel[best[1, 2]], k = ks[best[1, 
+        1]])
 
     options('contrasts'=old.contrasts)
     
@@ -639,21 +651,24 @@ plot.train.kknn <-function(x,...){
 	if(x$response=='continuous'){		
 		legend.text = colnames(x$MEAN.ABS)
 		m = 1:length(colnames(x$MEAN.ABS))
-		matplot(x$MEAN.SQU, xlab="k", ylab="mean squared error",pch = m,...)
+		matplot(x = as.integer(rownames(train.con$MEAN.SQU)),
+		        y = x$MEAN.SQU, xlab="k", ylab="mean squared error",pch = m,...)
 		xy <- par("usr")
 		legend(xy[2] - xinch(0.1), xy[4] - yinch(0.1), legend = legend.text, xjust = 1, yjust = 1,col=m,pch=m)
 		}
 	if(x$response=='ordinal'){
 		legend.text = colnames(x$MISCLASS)
 		m = 1:length(colnames(x$MISCLASS))
-		matplot(x$MEAN.ABS, xlab="k", ylab="mean absolute error",pch = m,...)
+		matplot(x = as.integer(rownames(train.con$MEAN.ABS)),
+		        y = x$MEAN.ABS, xlab="k", ylab="mean absolute error",pch = m,...)
 		xy <- par("usr")
 		legend(xy[2] - xinch(0.1), xy[4] - yinch(0.1), legend = legend.text, xjust = 1, yjust = 1,col=m,pch=m)
 		}
 	if(x$response=='nominal'){
 		legend.text = colnames(x$MISCLASS)
 		m = 1:length(colnames(x$MISCLASS))
-		matplot(x$MISCLASS, xlab="k", ylab="misclassification",pch = m,...)
+		matplot(x = as.integer(rownames(train.con$MISCLASS)),
+		        y = x$MISCLASS, xlab="k", ylab="misclassification",pch = m,...)
 		xy <- par("usr")
 		legend(xy[2] - xinch(0.1), xy[4] - yinch(0.1), legend = legend.text, xjust = 1, yjust = 1,col=m,pch=m)
 		}	
