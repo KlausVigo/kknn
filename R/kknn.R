@@ -651,7 +651,7 @@ plot.train.kknn <-function(x,...){
 	if(x$response=='continuous'){		
 		legend.text = colnames(x$MEAN.ABS)
 		m = 1:length(colnames(x$MEAN.ABS))
-		matplot(x = as.integer(rownames(train.con$MEAN.SQU)),
+		matplot(x = as.integer(rownames(x$MEAN.SQU)),
 		        y = x$MEAN.SQU, xlab="k", ylab="mean squared error",pch = m,...)
 		xy <- par("usr")
 		legend(xy[2] - xinch(0.1), xy[4] - yinch(0.1), legend = legend.text, xjust = 1, yjust = 1,col=m,pch=m)
@@ -659,7 +659,7 @@ plot.train.kknn <-function(x,...){
 	if(x$response=='ordinal'){
 		legend.text = colnames(x$MISCLASS)
 		m = 1:length(colnames(x$MISCLASS))
-		matplot(x = as.integer(rownames(train.con$MEAN.ABS)),
+		matplot(x = as.integer(rownames(x$MEAN.ABS)),
 		        y = x$MEAN.ABS, xlab="k", ylab="mean absolute error",pch = m,...)
 		xy <- par("usr")
 		legend(xy[2] - xinch(0.1), xy[4] - yinch(0.1), legend = legend.text, xjust = 1, yjust = 1,col=m,pch=m)
@@ -667,7 +667,7 @@ plot.train.kknn <-function(x,...){
 	if(x$response=='nominal'){
 		legend.text = colnames(x$MISCLASS)
 		m = 1:length(colnames(x$MISCLASS))
-		matplot(x = as.integer(rownames(train.con$MISCLASS)),
+		matplot(x = as.integer(rownames(x$MISCLASS)),
 		        y = x$MISCLASS, xlab="k", ylab="misclassification",pch = m,...)
 		xy <- par("usr")
 		legend(xy[2] - xinch(0.1), xy[4] - yinch(0.1), legend = legend.text, xjust = 1, yjust = 1,col=m,pch=m)
