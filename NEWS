@@ -4,9 +4,11 @@ OTHER CHANGES
 
     o predict got an additional argument "type"  
     
-    o changed igraph code to version >=1.0     
-
-
+    o changed igraph code to version >=1.0    
+    
+    o train.kknn has a new argument ks, a vector specifying values of k
+  
+  
 
             CHANGES IN KKNN VERSION 1.3.0
 
