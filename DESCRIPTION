@@ -2,9 +2,11 @@ Package: kknn
 Title: Weighted k-Nearest Neighbors
 Version: 1.3.1
 Date: 2016-03-06
-Author: Klaus Schliep & Klaus Hechenbichler
+Authors@R: c(
+    person("Klaus", "Schliep", email = "klaus.schliep@gmail.com", role = c("aut", "cre")),
+    person("Klaus", "Hechenbichler", email = "hechen@stat.uni-muenchen.de", role = "aut"),
+    person("Antoine", "Lizee", email = "antoine.lizee@gmail.com", role = "ctb"))
 Description: Weighted k-Nearest Neighbors for Classification, Regression and Clustering.
-Maintainer: Klaus Schliep <klaus.schliep@gmail.com>
 Depends: R (>= 2.10)
 Imports: igraph (>= 1.0), Matrix, stats, graphics
 ByteCompile: TRUE
