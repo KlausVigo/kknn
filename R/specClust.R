@@ -142,7 +142,7 @@ specClust <- function (data, centers=NULL, nn = 7, method = "symmetric", gmax=NU
 
     f <- function(x, extra) as.vector(extra %*% x)
 
-    if(is.null(centers))kmax = 25
+    if(is.null(centers))kmax = min(25, floor(nrow(data)/2))
     else kmax = max(centers)
 
     U <- arpack(f, extra = L, options = list(n = n, which = "SM", 
