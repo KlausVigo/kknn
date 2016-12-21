@@ -21,4 +21,4 @@ If you use kknn please cite:
 
 License
 -------
-phangorn is licensed under the GPLv2.
+kknn is licensed under the GPLv2.
