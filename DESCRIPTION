@@ -13,5 +13,6 @@ ByteCompile: TRUE
 License: GPL (>= 2)
 NeedsCompilation: yes
 URL: https://github.com/KlausVigo/kknn
+BugReports: https://github.com/KlausVigo/kknn/issues
 Repository: CRAN
 
