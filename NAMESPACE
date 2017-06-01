@@ -1,4 +1,4 @@
-useDynLib(kknn)
+useDynLib(kknn, .registration = TRUE)
 
 importFrom(Matrix, sparseMatrix, Diagonal, rowSums)
 importFrom(igraph, graph, decompose, arpack) # decompose.graph,
