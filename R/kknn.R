@@ -8,20 +8,20 @@ simulation <- function(formula, data, runs = 10, train = TRUE, k = 11, ...)
    .Deprecated("train.kknn or cv.kknn", "kknn", old="simulation")
    mf <- model.frame(formula, data=data)
    y <- model.response(mf)
-   MISCLASS<-numeric(runs)
-   MEAN.ABS<-numeric(runs)
-   MEAN.SQU<-numeric(runs)
+   MISCLASS <- numeric(runs)
+   MEAN.ABS <- numeric(runs)
+   MEAN.SQU <- numeric(runs)
    for(i in 1:runs)
      {
      set.seed(i)
-     m<-dim(data)[1]
-     val<-sample(1:m, size=round(m/3), replace=FALSE, prob=rep(1/m, m)) 
-     learn<-data[-val,]
-     valid<-data[val,]
-     ytmp<-y[val]
+     m <- dim(data)[1]
+     val <- sample(1:m, size=round(m/3), replace=FALSE, prob=rep(1/m, m)) 
+     learn <- data[-val,]
+     valid <- data[val,]
+     ytmp <- y[val]
      
      if(train){
-     	fit = train.kknn(formula , learn, kmax = k, ...)
+     	fit <- train.kknn(formula , learn, kmax = k, ...)
      	pred <- predict(fit, valid)}
      if(!train) pred <- predict(kknn(formula, learn, valid, k = k, ...))
      if(is.factor(y)) MISCLASS[i]<-sum(ytmp != pred)/dim(valid)[1]
@@ -41,8 +41,9 @@ simulation <- function(formula, data, runs = 10, train = TRUE, k = 11, ...)
 		mean(MEAN.ABS), sd(MEAN.ABS),
 		mean(MEAN.SQU), sd(MEAN.SQU)), 
 		nrow=2, ncol=3)
-		colnames(result)<-c("misclassification","absolute distance", "squared distance")
-		rownames(result)<-c("Mean", "sd")
+		colnames(result) <- c("misclassification","absolute distance", 
+		                    "squared distance")
+		rownames(result) <- c("Mean", "sd")
 		} 
    if(is.factor(y) & !is.ordered(y)){ 
 		result<-matrix(data=c(mean(MISCLASS), sd(MISCLASS)),	nrow=2, ncol=1)   
@@ -91,8 +92,8 @@ contr.metric <- function(n, contrasts = TRUE)
         else stop("contrasts are not defined for 0 degrees of freedom")
     }
     else levels <- n
-    	lenglev <- length(levels)
-        cont <- array((1:lenglev)-(1+lenglev)/2 , c(lenglev,1), list(levels,NULL)) 
+    lenglev <- length(levels)
+    cont <- array((1:lenglev)-(1+lenglev)/2 , c(lenglev,1), list(levels,NULL)) 
     cont	
 }
 
@@ -118,42 +119,42 @@ optKernel <- function(k, d=1){
 }
 
 
-kknn <-  function (formula = formula(train), train, test, na.action=na.omit(), k = 7, distance = 2, 
-    kernel = "optimal", ykernel = NULL, scale=TRUE, contrasts=c('unordered'="contr.dummy",ordered="contr.ordinal")) 
+kknn <-  function (formula = formula(train), train, test, na.action=na.omit(), 
+                   k = 7, distance = 2, kernel = "optimal", ykernel = NULL, 
+                   scale=TRUE, contrasts=c('unordered'="contr.dummy", 
+                                           ordered="contr.ordinal")) 
 {
-    if(is.null(ykernel)) ykernel=0
+    if(is.null(ykernel)) ykernel <- 0
 
-    weight.y = function(l=1,diff = 0){
-        k=diff+1
-        result=matrix(0,l,l)
-        diag(result)=k
+    weight.y <- function(l=1,diff = 0){
+        k <- diff+1
+        result <- matrix(0,l,l)
+        diag(result) <- k
         for(i in 1:(k-1)){
             for(j in 1:(l-i)){
-                result[j,j+i]=k-i
-                result[j+i,j]=k-i
+                result[j,j+i] <- k-i
+                result[j+i,j] <- k-i
             }
         }
         result  
     }
 
-    kernel <- match.arg(kernel, c("rectangular", "triangular", "epanechnikov", "biweight", 
-        "triweight", "cos", "inv", "gaussian", "rank", "optimal"), FALSE)
-    
+    kernel <- match.arg(kernel, c("rectangular", "triangular", "epanechnikov",
+                                  "biweight", "triweight", "cos", "inv", 
+                                  "gaussian", "rank", "optimal"), FALSE)
     ca <- match.call()
-    response = NULL
-    old.contrasts<-getOption('contrasts')
+    response <- NULL
+    old.contrasts <- getOption('contrasts')
     options(contrasts=contrasts)
 
-    formula = as.formula(formula)
+    formula <- as.formula(formula)
 
     mf <- model.frame(formula, data = train)    
     mt <- attr(mf, "terms")
 #reformulate(, intercept = FALSE
     
     mt2 <- delete.response(mt)
-
     cl <- model.response(mf)
-
     d <- sum(attr(mt, "order"))
 
     if(is.ordered(cl)) {
@@ -170,7 +171,7 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(), k
     if(k<=0)stop('k must >0')
 
     learn <- model.matrix(mt, mf)
-    valid <-model.matrix(mt2,test)
+    valid <- model.matrix(mt2,test)
 
     m <- dim(learn)[1]
     p <- dim(valid)[1]
@@ -178,17 +179,17 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(), k
 
     ind <- attributes(learn)$assign 
 
-    d.sd<-numeric(length(ind))+1
-    we<-numeric(length(ind))+1
+    d.sd <- numeric(length(ind))+1
+    we <- numeric(length(ind))+1
     
-    d.sd = apply(learn, 2, stats::var)
+    d.sd <- apply(learn, 2, stats::var)
     for (i in unique(ind)){
-    	d.sd[ind==i] = sqrt(mean(d.sd[ind==i]))
-    	we[ind==i] = 1/sum(ind==i)
+    	d.sd[ind==i] <- sqrt(mean(d.sd[ind==i]))
+    	we[ind==i] <- 1/sum(ind==i)
     	}
 
-    we[d.sd==0]=0
-    d.sd[d.sd==0]=1
+    we[d.sd==0] <- 0
+    d.sd[d.sd==0] <- 1
 
     if(scale){
 # change 5.3.2013      
@@ -196,11 +197,11 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(), k
         valid <- sweep(valid, 2L, d.sd, "/", check.margin = FALSE) 
     } 
 # ordering allows branch and bound in distance computation
-    ord = order(we * apply(learn, 2, sd), decreasing=TRUE)
+    ord <- order(we * apply(learn, 2, sd), decreasing=TRUE)
 
-    we = we[ord]
-    learn = learn[,ord, drop=FALSE]
-    valid = valid[,ord, drop=FALSE]
+    we <- we[ord]
+    learn <- learn[,ord, drop=FALSE]
+    valid <- valid[,ord, drop=FALSE]
 
     Euclid <- FALSE
     if(distance==2) Euclid <- TRUE
@@ -247,13 +248,13 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(), k
     if (kernel=="cos") W <- cos(W*pi/2)
     if (kernel=="triweights") W <- 1
     if (kernel=="gaussian"){
-	    alpha=1/(2*(k+1))
-	    qua=abs(qnorm(alpha))
-	    W=W*qua
-        W = dnorm(W, sd = 1)
+	    alpha <- 1/(2*(k+1))
+	    qua <- abs(qnorm(alpha))
+	    W <- W*qua
+      W <- dnorm(W, sd = 1)
     }
     if (kernel == "optimal") {
-        W = rep(optKernel(k, d=d), each=p)
+        W <- rep(optKernel(k, d=d), each=p)
     } 
     W <- matrix(W, p, k)
 
@@ -267,8 +268,8 @@ if(response!="continuous"){
     
 if (response=="ordinal") {
    
-    blub = length(lev)
-    weightClass= weightClass%*%weight.y(blub,ykernel)
+    blub <- length(lev)
+    weightClass <- weightClass%*%weight.y(blub,ykernel)
     weightClass <- weightClass/rowSums(weightClass)	
     weightClass <- t(apply(weightClass, 1, cumsum))
     colnames(weightClass) <- lev
@@ -283,16 +284,16 @@ if (response=="ordinal") {
 
 	if(kernel=="rectangular" && k>1){
 		blub <- apply(weightClass, 1, rank, ties.method = "max")
-		indices = (1:p)[colSums(blub==l)>1]
-		blub=t(blub)
-		nM = matrix(0,p,l) 
-		colnames(nM)=lev
-		for(i in 1:l) nM[,i] = apply((CL==lev[i]) %*% diag(1:k) ,1,max)
+		indices <- (1:p)[colSums(blub==l)>1]
+		blub <- t(blub)
+		nM <- matrix(0,p,l) 
+		colnames(nM) <- lev
+		for(i in 1:l) nM[,i] <- apply((CL==lev[i]) %*% diag(1:k) ,1,max)
 
-		nM = (blub==l)*nM  
+		nM <- (blub==l)*nM  
 		nM[nM==0] <- k+1
-		fitv = numeric(p)
-		for(i in indices) fitv[i]=which(nM[i,]==min(nM[i,]))
+		fitv <- numeric(p)
+		for(i in indices) fitv[i] <- which(nM[i,]==min(nM[i,]))
 		fit[indices] <- factor(fitv[indices], levels = 1:l, labels = lev)
 		}
 	}
@@ -300,8 +301,9 @@ if (response=="ordinal") {
     #fit <- rowSums(W*CL)/sapply(rowSums(W),'max',1e-6) 
     options('contrasts'=old.contrasts)	
 	
-    result <- list(fitted.values=fit, CL=CL, W=W, D=D, C=C, prob=weightClass, response=response, distance=distance, call=ca, terms=mt)	
-    class(result)='kknn'
+    result <- list(fitted.values=fit, CL=CL, W=W, D=D, C=C, prob=weightClass, 
+                   response=response, distance=distance, call=ca, terms=mt)	
+    class(result) <- 'kknn'
     result
 }
 
@@ -316,10 +318,10 @@ kknn.dist <- function(learn, valid, k = 10, distance = 2)
   
     we <- rep(1.0, q)
   
-    ord = order(we * apply(learn, 2, sd), decreasing=TRUE)
+    ord <- order(we * apply(learn, 2, sd), decreasing=TRUE)
   
-    learn = learn[,ord, drop=FALSE]
-    valid = valid[,ord, drop=FALSE]
+    learn <- learn[,ord, drop=FALSE]
+    valid <- valid[,ord, drop=FALSE]
     
     Euclid <- FALSE
     if(distance==2) Euclid <- TRUE
@@ -351,8 +353,9 @@ summary.kknn <- function(object, ...)
 
 	cat("\nCall:\n", deparse(object$call), "\n\n", sep = "")
 	cat("Response: ",deparse(object$response),"\n",sep="")
-	digits = max(3, getOption("digits") - 3)
-	if(object$response!="continuous")print(data.frame(fit=object$fitted.value,prob=object$prob),digits)
+	digits <- max(3, getOption("digits") - 3)
+	if(object$response!="continuous")print(data.frame(fit=object$fitted.value,
+	                                                  prob=object$prob),digits)
 	fit <- object$fit
 }
 
@@ -360,8 +363,8 @@ summary.kknn <- function(object, ...)
 predict.kknn <- function(object, type = 'raw', ...) 
 { 
     pred <- switch(type, 
-        raw = object$fit,
-        prob = object$prob,
+        raw <- object$fit,
+        prob <- object$prob,
         stop('invalid type for prediction'))
     pred
 }
@@ -393,26 +396,28 @@ predict.train.kknn <- function (object, newdata, ...)
 #}
 
 
-train.kknn = function (formula, data, kmax = 11, ks = NULL, distance = 2, kernel = "optimal", ykernel = NULL, scale=TRUE, 
+train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2, 
+                        kernel = "optimal", ykernel = NULL, scale=TRUE, 
     contrasts = c(unordered = "contr.dummy", ordered = "contr.ordinal"), ...) 
 {
-	if(is.null(ykernel)) ykernel=0
-    weight.y = function(l = 1, diff = 0) {
-        k = diff + 1
-        result = matrix(0, l, l)
-        diag(result) = k
+	if(is.null(ykernel)) ykernel <- 0
+    weight.y <- function(l = 1, diff = 0) {
+        k <- diff + 1
+        result <- matrix(0, l, l)
+        diag(result) <- k
         for (i in 1:(k - 1)) {
             for (j in 1:(l - i)) {
-                result[j, j + i] = k - i
-                result[j + i, j] = k - i
+                result[j, j + i] <- k - i
+                result[j + i, j] <- k - i
             }
         }
         result
     }
 #    if (is.null(kernel)) 
 #        kernel = "triangular"
-    kernel <- match.arg(kernel, c("rectangular", "triangular", "epanechnikov", "biweight", 
-        "triweight", "cos", "inv", "gaussian", "rank", "optimal"), TRUE)
+    kernel <- match.arg(kernel, c("rectangular", "triangular", "epanechnikov",
+                                  "biweight", "triweight", "cos", "inv", 
+                                  "gaussian", "rank", "optimal"), TRUE)
     
     if (is.null(ks)) {
       ks <- 1:kmax
@@ -436,12 +441,9 @@ train.kknn = function (formula, data, kmax = 11, ks = NULL, distance = 2, kernel
     d <- sum(attr(mt, "order"))
 
     r <- length(kernel)
-    MISCLASS <- matrix(nrow = nk, ncol = r, dimnames = list(ks, 
-        kernel))
-    MEAN.ABS <- matrix(nrow = nk, ncol = r, dimnames = list(ks, 
-        kernel))
-    MEAN.SQU <- matrix(nrow = nk, ncol = r, dimnames = list(ks, 
-        kernel))
+    MISCLASS <- matrix(nrow = nk, ncol = r, dimnames = list(ks, kernel))
+    MEAN.ABS <- matrix(nrow = nk, ncol = r, dimnames = list(ks, kernel))
+    MEAN.SQU <- matrix(nrow = nk, ncol = r, dimnames = list(ks, kernel))
     P <- list(nk * r)
     m <- dim(mm.data)[1]
     q <- dim(mm.data)[2]
@@ -457,20 +459,20 @@ train.kknn = function (formula, data, kmax = 11, ks = NULL, distance = 2, kernel
 #        we[ind == i] = 1/sum(ind == i)
 #    }
 
-    d.sd = apply(mm.data, 2, stats::var)
+    d.sd <- apply(mm.data, 2, stats::var)
     for (i in unique(ind)){
-    	d.sd[ind==i] = sqrt(mean(d.sd[ind==i]))
-    	we[ind==i] = 1/sum(ind==i)
+    	d.sd[ind==i] <- sqrt(mean(d.sd[ind==i]))
+    	we[ind==i] <- 1/sum(ind==i)
     	}
 
-    we[d.sd == 0] = 0
-    d.sd[d.sd == 0] = 1
+    we[d.sd == 0] <- 0
+    d.sd[d.sd == 0] <- 1
 #    mm.data <- t(t(mm.data)/d.sd) 
  
 #    raus 5.3.2013  
 #    if(scale) mm.data <- mm.data %*% diag(1/d.sd)         
   	if(scale) mm.data <- sweep(mm.data, 2L, d.sd, "/", check.margin = FALSE) 
-    ord = order(we * apply(mm.data, 2, sd), decreasing=TRUE)
+    ord <- order(we * apply(mm.data, 2, sd), decreasing=TRUE)
 # ordering
     mm.data <- mm.data[, ord, drop=FALSE]  
     we <- we[ord]
@@ -478,12 +480,14 @@ train.kknn = function (formula, data, kmax = 11, ks = NULL, distance = 2, kernel
     Euclid <- FALSE
     if(distance==2) Euclid <- TRUE
     if(Euclid) dmtmp <- .C("dmEuclid", as.double(mm.data), as.double(mm.data), 
-        as.integer(m), as.integer(p), as.integer(q), dm = double((kmax + 2L) * p), 
-        cl = integer((kmax + 2L) * p), k = as.integer(kmax + 2), as.double(distance), 
+        as.integer(m), as.integer(p), as.integer(q), 
+        dm = double((kmax + 2L) * p), cl = integer((kmax + 2L) * p), 
+        k = as.integer(kmax + 2), as.double(distance), 
         as.double(we), PACKAGE = "kknn")
     else dmtmp <- .C("dm", as.double(mm.data), as.double(mm.data), 
-        as.integer(m), as.integer(p), as.integer(q), dm = double((kmax + 2L) * p), 
-        cl = integer((kmax + 2L) * p), k = as.integer(kmax + 2), as.double(distance), 
+        as.integer(m), as.integer(p), as.integer(q), 
+        dm = double((kmax + 2L) * p), cl = integer((kmax + 2L) * p), 
+        k = as.integer(kmax + 2), as.double(distance), 
         as.double(we), PACKAGE = "kknn")
     D <- matrix(dmtmp$dm, nrow = p, ncol = kmax + 2)
     C <- matrix(dmtmp$cl, nrow = p, ncol = kmax + 2)
@@ -512,7 +516,7 @@ train.kknn = function (formula, data, kmax = 11, ks = NULL, distance = 2, kernel
     for (k_i in 1:nk) {
         j <- ks[k_i]
         maxdist <- D[, j + 1]
-        maxdist[maxdist < 1.0e-06] = 1.0e-06
+        maxdist[maxdist < 1.0e-06] <- 1.0e-06
         V <- D[, 1:j]/ maxdist # sapply(maxdist, "max", 1e-06)
 #        V <- D[, 1:j]/sapply(maxdist, "max", 1e-06)
         V <- pmin(V, 1 - (1e-06))
@@ -536,13 +540,13 @@ train.kknn = function (formula, data, kmax = 11, ks = NULL, distance = 2, kernel
                 W <- cos(V * pi/2)
             if (kernel[s] == "gaussian") {
             	v <- j + 1
-         	    alpha = 1/(2 * v)
-             	qua = abs(qnorm(alpha))
-             	W = V*qua
-            	W = apply(as.matrix(W), 2, dnorm)
+         	    alpha <- 1/(2 * v)
+             	qua <- abs(qnorm(alpha))
+             	W <- V*qua
+            	W <- apply(as.matrix(W), 2, dnorm)
             }
             if (kernel[s] == "optimal") {
-                W = rep(optKernel(j,d), each=m)
+                W <- rep(optKernel(j,d), each=m)
             }
             W <- matrix(W, m, j)
             if (response != "continuous") {
@@ -554,8 +558,8 @@ train.kknn = function (formula, data, kmax = 11, ks = NULL, distance = 2, kernel
                 colnames(weightClass) <- lev
             }
             if (response == "ordinal") {
-                blub = length(lev)
-                weightClass = weightClass %*% weight.y(blub, ykernel)
+                blub <- length(lev)
+                weightClass <- weightClass %*% weight.y(blub, ykernel)
                 weightClass <- weightClass/rowSums(weightClass)
                 weightClass <- t(apply(weightClass, 1, cumsum))
                 colnames(weightClass) <- lev
@@ -564,18 +568,20 @@ train.kknn = function (formula, data, kmax = 11, ks = NULL, distance = 2, kernel
                 fit <- ordered(fit, levels = 1:l, labels = lev)
             }
             if (response == "nominal") {
-				lwc = length(weightClass)
+				        lwc <- length(weightClass)
                 fit <- apply(weightClass, 1, order, decreasing = TRUE)[1, ]
                 fit <- factor(fit, levels = 1:l, labels = lev)
             }
             if (response == "continuous") {
-#                fit <- rowSums(W * (matrix(CL[, 1:j], m, j)))/sapply(rowSums(matrix(W, m, j)), "max", 1e-06)
-                fit <- rowSums(W * (matrix(CL[, 1:j], m, j)))/pmax(rowSums(matrix(W, m, j)), 1e-06)
-                weightClass = fit
+#      fit <- rowSums(W * (matrix(CL[, 1:j], m, j)))
+#      /sapply(rowSums(matrix(W, m, j)), "max", 1e-06)
+                fit <- rowSums(W * (matrix(CL[, 1:j], m, j))) / 
+                         pmax(rowSums(matrix(W, m, j)), 1e-06)
+                weightClass <- fit
             }
-            attr(fit, "kernel") = kernel[s]
-            attr(fit, "k") = j
-            P[[k_i + (s - 1) * nk]] = fit
+            attr(fit, "kernel") <- kernel[s]
+            attr(fit, "k") <- j
+            P[[k_i + (s - 1) * nk]] <- fit
 
         }
     }
@@ -599,16 +605,15 @@ train.kknn = function (formula, data, kmax = 11, ks = NULL, distance = 2, kernel
         best <- which(MEAN.ABS == min(MEAN.ABS), arr.ind = TRUE)
     if (response == "continuous") 
         best <- which(MEAN.SQU == min(MEAN.SQU), arr.ind = TRUE)
-    best.parameters = list(kernel = kernel[best[1, 2]], k = ks[best[1, 
-        1]])
+    best.parameters <- list(kernel = kernel[best[1, 2]], k = ks[best[1, 1]])
 
     options('contrasts'=old.contrasts)
     
-    result = list(MISCLASS = MISCLASS, MEAN.ABS = MEAN.ABS, MEAN.SQU = MEAN.SQU, 
-        fitted.values = P, best.parameters = best.parameters, 
-        response = response, distance = distance, call = call, 
-        terms = mt, data = data)
-    class(result) = c("train.kknn", "kknn")
+    result <- list(MISCLASS = MISCLASS, MEAN.ABS = MEAN.ABS, 
+                   MEAN.SQU= MEAN.SQU, fitted.values = P, 
+                   best.parameters = best.parameters, response = response, 
+                   distance = distance, call = call, terms = mt, data = data)
+    class(result) <- c("train.kknn", "kknn")
     result
 }
 
@@ -617,11 +622,13 @@ print.train.kknn <- function(x, ...)
 {
 	cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
 	cat("Type of response variable: ", x$response,"\n", sep = "")
-	if(x$response=='continuous'){cat("minimal mean absolute error: ",min(x$MEAN.ABS),"\n", sep = "")
+	if(x$response=='continuous'){cat("minimal mean absolute error: ", 
+	                                 min(x$MEAN.ABS),"\n", sep = "")
 		cat("Minimal mean squared error: ",min(x$MEAN.SQU),"\n", sep = "")}
 	if(x$response=='nominal'){
 		cat("Minimal misclassification: ",min(x$MISCLASS),"\n", sep = "")}
-	if(x$response=='ordinal'){cat("minimal mean absolute error: ",min(x$MEAN.ABS),"\n", sep = "")
+	if(x$response=='ordinal'){cat("minimal mean absolute error: ",min(x$MEAN.ABS),
+	                              "\n", sep = "")
 		cat("Minimal mean squared error: ",min(x$MEAN.SQU),"\n", sep = "")
 		cat("Minimal misclassification: ",min(x$MISCLASS),"\n", sep = "")
 		}	
@@ -634,11 +641,13 @@ summary.train.kknn <- function(object, ...)
 {
 	cat("\nCall:\n", deparse(object$call), "\n\n", sep = "")
 	cat("Type of response variable: ", object$response,"\n", sep = "")
-	if(object$response=='continuous'){cat("minimal mean absolute error: ",min(object$MEAN.ABS),"\n", sep = "")
+	if(object$response=='continuous'){cat("minimal mean absolute error: ",
+	                                      min(object$MEAN.ABS),"\n", sep = "")
 		cat("Minimal mean squared error: ",min(object$MEAN.SQU),"\n", sep = "")}
 	if(object$response=='nominal'){
 		cat("Minimal misclassification: ",min(object$MISCLASS),"\n", sep = "")}
-	if(object$response=='ordinal'){cat("minimal mean absolute error: ",min(object$MEAN.ABS),"\n", sep = "")
+	if(object$response=='ordinal'){cat("minimal mean absolute error: ",
+	                                   min(object$MEAN.ABS),"\n", sep = "")
 		cat("Minimal mean squared error: ",min(object$MEAN.SQU),"\n", sep = "")
 		cat("Minimal misclassification: ",min(object$MISCLASS),"\n", sep = "")
 		}	
@@ -649,28 +658,31 @@ summary.train.kknn <- function(object, ...)
 
 plot.train.kknn <-function(x,...){
 	if(x$response=='continuous'){		
-		legend.text = colnames(x$MEAN.ABS)
-		m = 1:length(colnames(x$MEAN.ABS))
+		legend.text <- colnames(x$MEAN.ABS)
+		m <- 1:length(colnames(x$MEAN.ABS))
 		matplot(x = as.integer(rownames(x$MEAN.SQU)),
 		        y = x$MEAN.SQU, xlab="k", ylab="mean squared error",pch = m,...)
 		xy <- par("usr")
-		legend(xy[2] - xinch(0.1), xy[4] - yinch(0.1), legend = legend.text, xjust = 1, yjust = 1,col=m,pch=m)
+		legend(xy[2] - xinch(0.1), xy[4] - yinch(0.1), legend = legend.text, 
+		       xjust = 1, yjust = 1,col=m,pch=m)
 		}
 	if(x$response=='ordinal'){
-		legend.text = colnames(x$MISCLASS)
-		m = 1:length(colnames(x$MISCLASS))
+		legend.text <- colnames(x$MISCLASS)
+		m <- 1:length(colnames(x$MISCLASS))
 		matplot(x = as.integer(rownames(x$MEAN.ABS)),
 		        y = x$MEAN.ABS, xlab="k", ylab="mean absolute error",pch = m,...)
 		xy <- par("usr")
-		legend(xy[2] - xinch(0.1), xy[4] - yinch(0.1), legend = legend.text, xjust = 1, yjust = 1,col=m,pch=m)
+		legend(xy[2] - xinch(0.1), xy[4] - yinch(0.1), legend = legend.text, 
+		       xjust = 1, yjust = 1,col=m,pch=m)
 		}
 	if(x$response=='nominal'){
-		legend.text = colnames(x$MISCLASS)
-		m = 1:length(colnames(x$MISCLASS))
+		legend.text <- colnames(x$MISCLASS)
+		m <- 1:length(colnames(x$MISCLASS))
 		matplot(x = as.integer(rownames(x$MISCLASS)),
 		        y = x$MISCLASS, xlab="k", ylab="misclassification",pch = m,...)
 		xy <- par("usr")
-		legend(xy[2] - xinch(0.1), xy[4] - yinch(0.1), legend = legend.text, xjust = 1, yjust = 1,col=m,pch=m)
+		legend(xy[2] - xinch(0.1), xy[4] - yinch(0.1), legend = legend.text, 
+		       xjust = 1, yjust = 1,col=m,pch=m)
 		}	
 }
 
@@ -684,15 +696,17 @@ cv.kknn <- function(formula, data, kcv = 10, ...)
   val<-sample(kcv, size=l, replace=TRUE) 
   yhat <- numeric(l)
   for(i in 1:kcv){
-    m<-dim(data)[1]
-    learn<-data[val!=i,]
-    valid<-data[val==i,]
-    fit = kknn(formula , learn, valid, ...)
+    m <- dim(data)[1]
+    learn <- data[val!=i,]
+    valid <- data[val==i,]
+    fit <- kknn(formula , learn, valid, ...)
     yhat[val==i] <- predict(fit)
   }  
   if(is.factor(y)) MISCLASS <- sum(y != yhat)/l
-  if(is.numeric(y) | is.ordered(y)) MEAN.ABS <- sum(abs(as.numeric(y) - as.numeric(yhat)))/l
-  if(is.numeric(y) | is.ordered(y)) MEAN.SQU <- sum((as.numeric(y) - as.numeric(yhat))^2)/l
+  if(is.numeric(y) | is.ordered(y)) MEAN.ABS <- sum(abs(as.numeric(y) - 
+                                                          as.numeric(yhat)))/l
+  if(is.numeric(y) | is.ordered(y)) MEAN.SQU <- sum((as.numeric(y) - 
+                                                       as.numeric(yhat))^2)/l
   if(is.numeric(y)) result <- c(MEAN.ABS, MEAN.SQU)
   if(is.ordered(y)) result <- c(MISCLASS, MEAN.ABS, MEAN.SQU)
   if(is.factor(y) & !is.ordered(y)) result<-MISCLASS 
@@ -702,26 +716,27 @@ cv.kknn <- function(formula, data, kcv = 10, ...)
 
 prepare.Discrete <- function(data){
   if(class(data)=="factor")return(as.matrix(unclass(data)))
-  if(class(data)=="data.frame")return(as.matrix(data.frame(lapply(data,unclass))))
+  if(class(data)=="data.frame")
+    return(as.matrix(data.frame(lapply(data,unclass))))
 }
 
 
-kknn.dist2 <- function(learn, valid, learnD=NULL, validD=NULL, k = 10, distance = 2) 
+kknn.dist2 <- function(learn, valid, learnD=NULL, validD=NULL, k=10, distance=2) 
 {
   m <- dim(learn)[1]
   p <- dim(valid)[1]
   q <- dim(learn)[2]
   
   we <- rep(1.0, q)
-  ord = order(we * apply(learn, 2, sd), decreasing=TRUE)
+  ord <- order(we * apply(learn, 2, sd), decreasing=TRUE)
   
   if(!is.null(validD)){
     q2 <- dim(learnD)[2]
     we2 <- rep(1.0, ncol(learnD))
   } 
   
-  learn = learn[,ord, drop=FALSE]
-  valid = valid[,ord, drop=FALSE]
+  learn <- learn[,ord, drop=FALSE]
+  valid <- valid[,ord, drop=FALSE]
   
   Euclid <- FALSE
   if(distance==2) Euclid <- TRUE

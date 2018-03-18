@@ -1,5 +1,5 @@
 /*
- *  Copyright (C)2009-2015 Klaus Schliep
+ *  Copyright (C)2009-2018 Klaus Schliep
  *               
  *
  *  This program is free software; you can redistribute it and/or modify
