@@ -219,8 +219,8 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(),
     C <- matrix(dmtmp$cl, nrow = p, ncol = k + 1)
     maxdist <- D[, k + 1]
     maxdist[maxdist < 1.0e-6] <- 1.0e-6
-    D <- D[, 1:k]
-    C <- C[, 1:k]+1
+    D <- D[, 1:k, drop=FALSE]
+    C <- C[, 1:k, drop=FALSE]+1
     CL <- matrix(cl[C], nrow = p, ncol = k)     
     
     if(response!="continuous"){
@@ -360,13 +360,16 @@ summary.kknn <- function(object, ...)
 }
 
 
-predict.kknn <- function(object, type = 'raw', ...) 
+predict.kknn <- function(object, type = c("raw", "prob"), ...) 
 { 
-    pred <- switch(type, 
-        raw <- object$fit,
-        prob <- object$prob,
-        stop('invalid type for prediction'))
-    pred
+    type <- match.arg(type)
+    if(type=="raw") return(object$fit)
+    if(type=="prob") return(object$prob)
+#    pred <- switch(type, 
+#        raw <- object$fit,
+#        prob <- object$prob,
+#        stop('invalid type for prediction'))
+    return(NULL)
 }
 
 
@@ -721,7 +724,7 @@ prepare.Discrete <- function(data){
 }
 
 
-kknn.dist2 <- function(learn, valid, learnD=NULL, validD=NULL, k=10, distance=2) 
+kknn.dist2 <- function(learn, valid, learnD=NULL, validD=NULL, k=10, distance=2)
 {
   m <- dim(learn)[1]
   p <- dim(valid)[1]
@@ -751,7 +754,8 @@ kknn.dist2 <- function(learn, valid, learnD=NULL, validD=NULL, k=10, distance=2)
           as.integer(m), as.integer(p), as.integer(q), as.integer(q2), 
           dm=double(k * p), cl=integer(k * p), k=as.integer(k), 
           as.double(distance), as.double(we), as.double(we2), PACKAGE='kknn')  
-#dmEuclid2( int *n, int *m, int *p, int *p2, double *dm, int *cl, int *k, double *mink, double *weights, double *weights2)
+# dmEuclid2( int *n, int *m, int *p, int *p2, double *dm, int *cl, int *k, 
+# double *mink, double *weights, double *weights2)
   }
   else dmtmp <- .C("dm", as.double(learn), as.double(valid), 
                    as.integer(m), as.integer(p), as.integer(q), 

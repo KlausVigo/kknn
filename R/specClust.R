@@ -15,7 +15,7 @@ fast.table <- function (data)
     y <- tabulate(bin, pd)      
     result <- list(index = bin, weights = y, data = data[ind,])
     result   
-}                                                                                        
+} 
 
 
 mydist <- function(data, k=20, distance = 2){
