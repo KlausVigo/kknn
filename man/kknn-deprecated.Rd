@@ -1,7 +1,5 @@
 \name{kknn-deprecated}
-%\alias{kknn-deprecated}
 \alias{simulation}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Deprecated Functions in Package kknn
 }
@@ -28,8 +26,5 @@ Hechenbichler K. and Schliep K.P. (2004)  \emph{Weighted k-Nearest-Neighbor Tech
 (\url{http://www.stat.uni-muenchen.de/sfb386/papers/dsp/paper399.ps}) 
 }
 \seealso{  \code{\link[base]{Defunct}} and \code{\link[base]{Deprecated}} }
-
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ classif }
 

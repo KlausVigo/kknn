@@ -67,7 +67,7 @@ Samworth, R.J. (2012) \emph{Optimal weighted nearest neighbour classifiers.} Ann
  
 
 
-\seealso{ \code{\link[kknn]{train.kknn}}, \code{\link[kknn]{simulation}}, \code{\link[class]{knn}} and \code{\link[class]{knn1}} }
+\seealso{ \code{\link[kknn]{train.kknn}} }
 \examples{
 library(kknn)
 
