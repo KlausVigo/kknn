@@ -80,7 +80,7 @@ void dm(double *learn, double *valid, int *n, int *m, int *p, double *dm, int *c
 
 
 
-void dmEuclid(double *learn, double *valid, int *n, int *m, int *p, double *dm, int *cl, int *k, double *mink, double *weights){
+void dmEuclid(double *learn, double *valid, int *n, int *m, int *p, double *dm, int *cl, int *k, double *weights){
     int i, j, l, t, nn, ii, kk; 
     double tmp, *dvec, maxD, tmp2;
     int *cvec;
@@ -126,7 +126,7 @@ void dmEuclid(double *learn, double *valid, int *n, int *m, int *p, double *dm, 
 
 
 
-void dmEuclid2(double *learn, double *valid, int *learnF, int *validF, int *n, int *m, int *p, int *p2, double *dm, int *cl, int *k, double *mink, double *weights, double *weights2){
+void dmEuclid2(double *learn, double *valid, int *learnF, int *validF, int *n, int *m, int *p, int *p2, double *dm, int *cl, int *k, double *weights, double *weights2){
     int i, j, l, l2, t, nn, ii, kk; 
     double tmp, *dvec, maxD, tmp2;
     int *cvec;

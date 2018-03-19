@@ -177,7 +177,8 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(),
     p <- dim(valid)[1]
     q <- dim(learn)[2]
 
-    if(k>p)stop('k must be smaller or equal the number of rows of training set')
+    if(k>p) stop('k must be smaller or equal the number of rows of the training
+                 set')
     
     ind <- attributes(learn)$assign 
 
@@ -210,7 +211,7 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(),
     if(Euclid) dmtmp <- .C("dmEuclid", as.double(learn), as.double(valid), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm=double((k+1L) * p), cl=integer((k+1L) * p), k=as.integer(k+1), 
-        as.double(distance),as.double(we), PACKAGE='kknn')
+        as.double(we), PACKAGE='kknn')
 
     else dmtmp <- .C("dm", as.double(learn), as.double(valid), 
         as.integer(m), as.integer(p), as.integer(q), 
@@ -318,6 +319,9 @@ kknn.dist <- function(learn, valid, k = 10, distance = 2)
     p <- dim(valid)[1]
     q <- dim(learn)[2]
   
+    if(k>m) stop('k must be smaller or equal the number of rows of the training
+                 set')
+    
     we <- rep(1.0, q)
   
     ord <- order(we * apply(learn, 2, sd), decreasing=TRUE)
@@ -330,7 +334,7 @@ kknn.dist <- function(learn, valid, k = 10, distance = 2)
     if(Euclid) dmtmp <- .C("dmEuclid", as.double(learn), as.double(valid), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm=double(k * p), cl=integer(k * p), k=as.integer(k), 
-        as.double(distance),as.double(we), PACKAGE='kknn')
+        as.double(we), PACKAGE='kknn')
     else dmtmp <- .C("dm", as.double(learn), as.double(valid), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm=double(k * p), cl=integer(k * p), k=as.integer(k), 
@@ -487,8 +491,7 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
     if(Euclid) dmtmp <- .C("dmEuclid", as.double(mm.data), as.double(mm.data), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm = double((kmax + 2L) * p), cl = integer((kmax + 2L) * p), 
-        k = as.integer(kmax + 2), as.double(distance), 
-        as.double(we), PACKAGE = "kknn")
+        k = as.integer(kmax + 2), as.double(we), PACKAGE = "kknn")
     else dmtmp <- .C("dm", as.double(mm.data), as.double(mm.data), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm = double((kmax + 2L) * p), cl = integer((kmax + 2L) * p), 
@@ -750,12 +753,12 @@ kknn.dist2 <- function(learn, valid, learnD=NULL, validD=NULL, k=10, distance=2)
       dmtmp <- .C("dmEuclid", as.double(learn), as.double(valid), 
                          as.integer(m), as.integer(p), as.integer(q), 
                          dm=double(k * p), cl=integer(k * p), k=as.integer(k), 
-                         as.double(distance),as.double(we), PACKAGE='kknn')
+                         as.double(we), PACKAGE='kknn')
       else dmtmp <- .C("dmEuclid2", as.double(learn), as.double(valid), 
           as.integer(learnD), as.integer(validD),             
           as.integer(m), as.integer(p), as.integer(q), as.integer(q2), 
           dm=double(k * p), cl=integer(k * p), k=as.integer(k), 
-          as.double(distance), as.double(we), as.double(we2), PACKAGE='kknn')  
+          as.double(we), as.double(we2), PACKAGE='kknn')  
 # dmEuclid2( int *n, int *m, int *p, int *p2, double *dm, int *cl, int *k, 
 # double *mink, double *weights, double *weights2)
   }
