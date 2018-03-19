@@ -4,6 +4,18 @@ OTHER CHANGES
 
     o added native routine registration
 
+    o added some unit tests
+
+BUG FIXES
+
+    o checks that k is smaller than the number of observations in the learning 
+     
+      set
+      
+    o if k was equal or larger the number of observation in the learning set 
+    
+      result were spurious
+    
 
 
             CHANGES IN KKNN VERSION 1.3.1
