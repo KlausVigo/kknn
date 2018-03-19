@@ -41,10 +41,12 @@ void dm(double *learn, double *valid, int *n, int *m, int *p, double *dm, int *c
 
     cvec = (int *) R_alloc(nn, sizeof(int));
     dvec = (double *) R_alloc(nn, sizeof(double));
-    for(t=0;t<nn;t++)dvec[t]= BIG;
+//    for(t=0;t<nn;t++)dvec[t]= BIG;
 
 
     for(j=0;j<(*m);j++){
+      for(t=0;t<(nn + 1);t++)dvec[t]= BIG;
+      
         i=0;
         ii=0L; 
         maxD = BIG;
@@ -87,39 +89,38 @@ void dmEuclid(double *learn, double *valid, int *n, int *m, int *p, double *dm, 
     kk = MIN(kk, *n);
     nn = MIN(2L*kk, *n);
 
-    cvec = (int *) R_alloc(nn, sizeof(int));
-    dvec = (double *) R_alloc(nn, sizeof(double));
-    for(t=0;t<nn;t++)dvec[t]= BIG;
+    cvec = (int *) R_alloc(nn+1L, sizeof(int));
+    dvec = (double *) R_alloc(nn+1L, sizeof(double));
     for(j=0;j<(*m);j++){
+      for(t=0;t<(nn + 1);t++)dvec[t]= BIG;
         i=0L;
         ii=0L; 
         maxD = BIG;
-
         while(i<*n){
 	        tmp=0.0;
-            l=0; 
+          l=0; 
 	        while(l<*p && tmp < (maxD+EPS)){
-                tmp2 = learn[i+l*n[0]]-valid[j+l*m[0]];
-	            tmp += (tmp2*tmp2)* weights[l];
-                l++;               
+            tmp2 = learn[i+l*n[0]]-valid[j+l*m[0]];
+	          tmp += (tmp2*tmp2)* weights[l];
+            l++;               
 	        }                      
-            if(tmp < maxD){
-                dvec[ii]=tmp;
-                cvec[ii]=i;
-                ii++;
-            }
-            if( ii==(nn-1L) ){  
-                rsort_with_index(dvec, cvec, nn);
-                ii= *k-1L;
-                maxD = dvec[*k-1L]; 
-                }
-             i++;         
+          if(tmp < maxD){
+            dvec[ii]=tmp;
+            cvec[ii]=i;
+            ii++;
+          }
+          if(ii==(nn-1L) ){  
+            rsort_with_index(dvec, cvec, nn);
+            ii= *k-1L;
+            maxD = dvec[*k-1L]; 
+          }
+          i++;         
 	    }
-        rsort_with_index(dvec, cvec, nn);
-        for(t=0;t<*k;t++){
-            cl[j+t * *m]=cvec[t];
-            dm[j+t * *m]=sqrt(dvec[t]);
-        }
+      rsort_with_index(dvec, cvec, nn+1L);
+      for(t=0;t<*k;t++){
+        cl[j+t * *m]=cvec[t];
+        dm[j+t * *m]=sqrt(dvec[t]);
+      }
     }
 }
 
@@ -138,6 +139,7 @@ void dmEuclid2(double *learn, double *valid, int *learnF, int *validF, int *n, i
     dvec = (double *) R_alloc(nn, sizeof(double));
     for(t=0;t<nn;t++)dvec[t]= BIG;
     for(j=0;j<(*m);j++){
+      for(t=0;t<nn;t++)dvec[t]= BIG;
         i=0L;
         ii=0L; 
         maxD = BIG;
