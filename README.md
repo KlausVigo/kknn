@@ -3,7 +3,8 @@
 [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
 [![CRAN Downloads](http://cranlogs.r-pkg.org/badges/kknn)](http://cran.r-project.org/package=kknn)
 [![Research software impact](http://depsy.org/api/package/cran/kknn/badge.svg)](http://depsy.org/package/r/kknn)
-
+[![codecov](https://codecov.io/gh/KlausVigo/kknn/branch/master/graph/badge.svg)](https://codecov.io/gh/KlausVigo/kknn)
+[![Coverage Status](https://coveralls.io/repos/github/KlausVigo/kknn/badge.svg?branch=master)](https://coveralls.io/github/KlausVigo/kknn?branch=master)
 
 kknn
 ========================================================
