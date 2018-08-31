@@ -710,7 +710,7 @@ cv.kknn <- function(formula, data, kcv = 10, ...)
     fit <- kknn(formula , learn, valid, ...)
     yhat[val==i] <- predict(fit)
   }  
-  if(is.factor(y)) MISCLASS <- sum(y != yhat)/l
+  if(is.factor(y)) MISCLASS <- sum(as.numeric(y) != yhat)/l
   if(is.numeric(y) | is.ordered(y)) MEAN.ABS <- sum(abs(as.numeric(y) - 
                                                           as.numeric(yhat)))/l
   if(is.numeric(y) | is.ordered(y)) MEAN.SQU <- sum((as.numeric(y) - 
