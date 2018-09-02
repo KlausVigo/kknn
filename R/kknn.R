@@ -701,7 +701,7 @@ cv.kknn <- function(formula, data, kcv = 10, ...)
   # terms(formula, data = data) keine kopie der Daten?
   y <- model.response(mf)                 
   l <- length(y)    # nrow(data)                  
-  val<-sample(kcv, size=l, replace=TRUE) 
+  val <- cut(seq(1, nrow(data)), breaks = kcv, labels = FALSE)
   yhat <- numeric(l)
   for(i in 1:kcv){
     m <- dim(data)[1]
