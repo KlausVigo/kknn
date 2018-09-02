@@ -697,6 +697,7 @@ plot.train.kknn <-function(x,...){
 
 cv.kknn <- function(formula, data, kcv = 10, ...)
 {
+  data <- data[sample(nrow(data)),]
   mf <- model.frame(formula, data=data) 
   # terms(formula, data = data) keine kopie der Daten?
   y <- model.response(mf)                 
