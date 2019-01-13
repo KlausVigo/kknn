@@ -177,7 +177,7 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(),
     p <- dim(valid)[1]
     q <- dim(learn)[2]
 
-    if(k>p) stop('k must be smaller or equal the number of rows of the training
+    if(k>m) stop('k must be smaller or equal the number of rows of the training
                  set')
     
     ind <- attributes(learn)$assign 
