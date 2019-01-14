@@ -368,13 +368,22 @@ summary.kknn <- function(object, ...)
 
 predict.kknn <- function(object, type = c("raw", "prob"), ...) 
 { 
+    call <- object$call
+    extras <- match.call(expand.dots = FALSE)$...
+    if (length(extras)) {
+        names(extras)[names(extras) == "new.data"] = "test"
+        existing <- !is.na(match(names(extras), c("test", "k", "distance",
+                           "kernel", "ykernel", "scale", "contrasts")))
+        for (a in names(extras)[existing]) call[[a]] <- extras[[a]]
+#        if (any(!existing)) {
+#              call <- c(as.list(call), extras[!existing])
+#              call <- as.call(call)
+#        }
+        object <- eval(call, object, parent.frame())
+    }  
     type <- match.arg(type)
     if(type=="raw") return(object$fit)
     if(type=="prob") return(object$prob)
-#    pred <- switch(type, 
-#        raw <- object$fit,
-#        prob <- object$prob,
-#        stop('invalid type for prediction'))
     return(NULL)
 }
 
@@ -383,26 +392,11 @@ predict.train.kknn <- function (object, newdata, ...)
 {
     if (missing(newdata)) 
         return(predict(object, ...)) 
-    #    return(object$fit)
     res <- kknn(formula(terms(object)), object$data, newdata, 
         k = object$best.parameters$k, kernel = object$best.parameters$kernel, 
         distance = object$distance)
     return(predict(res, ...))
 }
-
-
-#predict.kknn <- function(object,...)return(object$fit)
-
-
-#predict.train.kknn <- function (object, newdata, ...) 
-#{
-#    if (missing(newdata)) 
-#        return(object$fit)
-#    res = kknn(formula(terms(object)), object$data, newdata, 
-#        k = object$best.parameters$k, kernel = object$best.parameters$kernel, 
-#        distance = object$distance)
-#   return(predict(res))
-#}
 
 
 train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2, 
