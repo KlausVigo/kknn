@@ -416,21 +416,9 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
         }
         result
     }
-#    if (is.null(kernel)) 
-#        kernel = "triangular"
     kernel <- match.arg(kernel, c("rectangular", "triangular", "epanechnikov",
                                   "biweight", "triweight", "cos", "inv", 
                                   "gaussian", "rank", "optimal"), TRUE)
-    
-    if (is.null(ks)) {
-      ks <- 1:kmax
-      nk <- kmax
-    } else {
-      ks <- sort(ks)
-      nk <- length(ks)
-      kmax <- max(ks)
-    }
-    
     call <- match.call()
     mf <- model.frame(formula, data = data)
     mt <- attr(mf, "terms")
@@ -440,18 +428,32 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
     old.contrasts <- getOption("contrasts")
     options(contrasts = contrasts)
     mm.data <- model.matrix(mt, mf)
-  
+    p <- m <- dim(mm.data)[1]
+    q <- dim(mm.data)[2]
+    
     d <- sum(attr(mt, "order"))
 
+    if(kmax >= m){
+      warning("kmax was to high")
+      kmax <- m-1L
+    } 
+    if (is.null(ks)) {
+      ks <- 1:kmax
+      nk <- kmax
+    } else {
+      ks <- sort(ks)
+      nk <- length(ks)
+      kmax <- max(ks)
+    }
+    
     r <- length(kernel)
+    P <- list(nk * r)
+
+
     MISCLASS <- matrix(nrow = nk, ncol = r, dimnames = list(ks, kernel))
     MEAN.ABS <- matrix(nrow = nk, ncol = r, dimnames = list(ks, kernel))
     MEAN.SQU <- matrix(nrow = nk, ncol = r, dimnames = list(ks, kernel))
-    P <- list(nk * r)
-    m <- dim(mm.data)[1]
-    q <- dim(mm.data)[2]
-    p <- m
-
+    
     ind <- attributes(mm.data)$assign
   
     d.sd <- numeric(length(ind)) + 1
@@ -482,19 +484,22 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
 
     Euclid <- FALSE
     if(distance==2) Euclid <- TRUE
+    
+    kmax2 <- kmax + 2L
+    if(kmax2 > m) kmax2 <- m
     if(Euclid) dmtmp <- .C("dmEuclid", as.double(mm.data), as.double(mm.data), 
         as.integer(m), as.integer(p), as.integer(q), 
-        dm = double((kmax + 2L) * p), cl = integer((kmax + 2L) * p), 
-        k = as.integer(kmax + 2), as.double(we), PACKAGE = "kknn")
+        dm = double((kmax2) * p), cl = integer(kmax2 * p), 
+        k = as.integer(kmax2), as.double(we), PACKAGE = "kknn")
     else dmtmp <- .C("dm", as.double(mm.data), as.double(mm.data), 
         as.integer(m), as.integer(p), as.integer(q), 
-        dm = double((kmax + 2L) * p), cl = integer((kmax + 2L) * p), 
-        k = as.integer(kmax + 2), as.double(distance), 
+        dm = double(kmax2 * p), cl = integer(kmax2 * p), 
+        k = as.integer(kmax2), as.double(distance), 
         as.double(we), PACKAGE = "kknn")
-    D <- matrix(dmtmp$dm, nrow = p, ncol = kmax + 2)
-    C <- matrix(dmtmp$cl, nrow = p, ncol = kmax + 2)
+    D <- matrix(dmtmp$dm, nrow = p, ncol = kmax2)
+    C <- matrix(dmtmp$cl, nrow = p, ncol = kmax2)
     C <- C + 1
-    CL <- matrix(cl[C], nrow = p, ncol = kmax + 2)  # y statt cl
+    CL <- matrix(cl[C], nrow = p, ncol = kmax2)  # y statt cl
     D <- D[, -1]
     C <- C[, -1]
     CL <- CL[, -1]
@@ -517,7 +522,7 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
 
     for (k_i in 1:nk) {
         j <- ks[k_i]
-        maxdist <- D[, j + 1]
+        maxdist <- D[, min(j + 1, ncol(D)) ]
         maxdist[maxdist < 1.0e-06] <- 1.0e-06
         V <- D[, 1:j]/ maxdist # sapply(maxdist, "max", 1e-06)
 #        V <- D[, 1:j]/sapply(maxdist, "max", 1e-06)

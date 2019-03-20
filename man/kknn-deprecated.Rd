@@ -23,7 +23,7 @@ error, the absolute and the squared distances.
 }
 \references{
 Hechenbichler K. and Schliep K.P. (2004)  \emph{Weighted k-Nearest-Neighbor Techniques and Ordinal Classification}, Discussion Paper 399, SFB 386, Ludwig-Maximilians University Munich
-(\url{http://www.stat.uni-muenchen.de/sfb386/papers/dsp/paper399.ps}) 
+(\url{https://doi.org/10.5282/ubm/epub.1769}) 
 }
 \seealso{  \code{\link[base]{Defunct}} and \code{\link[base]{Deprecated}} }
 \keyword{ classif }

@@ -17,7 +17,7 @@ You can install
 
 If you use kknn please cite:
 
-[Hechenbichler K. and Schliep K.P. (2004) Weighted k-Nearest-Neighbor Techniques and Ordinal Classification, Discussion Paper 399, SFB 386, Ludwig-Maximilians University Munich](http://www.stat.uni-muenchen.de/sfb386/papers/dsp/paper399.ps)
+[Hechenbichler K. and Schliep K.P. (2004) Weighted k-Nearest-Neighbor Techniques and Ordinal Classification, Discussion Paper 399, SFB 386, Ludwig-Maximilians University Munich](https://doi.org/10.5282/ubm/epub.1769)
 
 
 License

@@ -26,7 +26,7 @@ a matrix with \emph{n} rows and \emph{n} columns for \code{contr.dummy}
 and a vector of length \emph{n} for \code{contr.metric}.
 }
 \references{Hechenbichler K. and Schliep K.P. (2004)  \emph{Weighted k-Nearest-Neighbor Techniques and Ordinal Classification}, Discussion Paper 399, SFB 386, Ludwig-Maximilians University Munich
-(\url{http://www.stat.uni-muenchen.de/sfb386/papers/dsp/paper399.ps})}
+(\url{https://doi.org/10.5282/ubm/epub.1769})}
 \author{Klaus P. Schliep \email{klaus.schliep@gmail.com} }
  
 \seealso{\code{\link[stats]{contrasts}}, \code{\link[stats:contrast]{contr.poly}} and \code{\link[MASS]{contr.sdif}} }
