@@ -1,7 +1,6 @@
 # Sample .travis.yml for R projects from https://github.com/craigcitro/r-travis
 
 language: r
-sudo: required
 
 env:
   - WARNINGS_ARE_ERRORS=false
@@ -9,10 +8,16 @@ env:
 r_github_packages:
   - jimhester/covr
 
-
-after_success:
-  - Rscript -e 'library(covr);coveralls();codecov()'
-  
+matrix:
+  include:
+  - r: release
+    after_success:
+    - Rscript -e 'library(covr);coveralls();codecov()'
+    before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
+    deploy:
+      provider: script
+      script: Rscript -e 'pkgdown::deploy_site_github()'
+      skip_cleanup: true  
   
 notifications:
   email:
