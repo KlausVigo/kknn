@@ -1,6 +1,6 @@
 Package: kknn
 Title: Weighted k-Nearest Neighbors
-Version: 1.3.2
+Version: 1.3.2.1
 Authors@R: c(
     person("Klaus", "Schliep", email = "klaus.schliep@gmail.com", role = c("aut", "cre")),
     person("Klaus", "Hechenbichler", role = "aut"),
@@ -8,7 +8,7 @@ Authors@R: c(
 Description: Weighted k-Nearest Neighbors for Classification, Regression and Clustering.
 Depends: R (>= 2.10)
 Imports: igraph (>= 1.0), Matrix, stats, graphics
-Suggests: testthat
+Suggests: tinytest
 ByteCompile: TRUE
 License: GPL (>= 2)
 NeedsCompilation: yes
