@@ -401,7 +401,7 @@ predict.train.kknn <- function (object, newdata, ...)
 
 train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2, 
                         kernel = "optimal", ykernel = NULL, scale=TRUE, 
-    contrasts = c(unordered = "contr.dummy", ordered = "contr.ordinal"), ...) 
+    contrasts = c(unordered = kknn::contr.dummy, ordered = kknn::contr.ordinal), ...) 
 {
 	if(is.null(ykernel)) ykernel <- 0
     weight.y <- function(l = 1, diff = 0) {
@@ -425,9 +425,20 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
 
     y <- model.response(mf)
     cl <- model.response(mf)
-    old.contrasts <- getOption("contrasts")
-    options(contrasts = contrasts)
-    mm.data <- model.matrix(mt, mf)
+    
+    dataClasses <- attr(mt, "dataClasses")
+    unorderedVariables <- names(dataClasses[dataClasses %in% c("factor", "character")])
+    orderedVariables   <- names(dataClasses[dataClasses %in% c("ordered")])
+    
+    if (length(unorderedVariables) == 0 && length(orderedVariables) == 0) {
+      contrasts.arg <- NULL
+    } else {
+      contrasts.arg <- list()
+      contrasts.arg[unorderedVariables] <- list(contrasts[["unordered"]])
+      contrasts.arg[orderedVariables]   <- list(contrasts[["ordered"]])
+    }
+    
+    mm.data <- model.matrix(mt, mf, contrasts.arg = contrasts.arg)
     p <- m <- dim(mm.data)[1]
     q <- dim(mm.data)[2]
     
@@ -614,7 +625,6 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
         best <- which(MEAN.SQU == min(MEAN.SQU), arr.ind = TRUE)
     best.parameters <- list(kernel = kernel[best[1, 2]], k = ks[best[1, 1]])
 
-    options('contrasts'=old.contrasts)
     
     result <- list(MISCLASS = MISCLASS, MEAN.ABS = MEAN.ABS, 
                    MEAN.SQU= MEAN.SQU, fitted.values = P, 
