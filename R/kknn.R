@@ -113,6 +113,21 @@ contr.int <- function (n, contrasts = TRUE)
     cont
 }
 
+getContrastsArg <- function(mt, contrasts)
+{
+  dataClasses <- attr(mt, "dataClasses")
+  unorderedVariables <- names(dataClasses[dataClasses %in% c("factor", "character")])
+  orderedVariables   <- names(dataClasses[dataClasses == "ordered"])
+
+  if (length(unorderedVariables) == 0 && length(orderedVariables) == 0) {
+    contrasts.arg <- NULL
+  } else {
+    contrasts.arg <- list()
+    contrasts.arg[unorderedVariables] <- list(contrasts[["unordered"]])
+    contrasts.arg[orderedVariables]   <- list(contrasts[["ordered"]])
+  }
+  return(contrasts.arg)
+}
 
 optKernel <- function(k, d=1){
    1/k*(1 + d/2 - d/(2*k^(2/d)) * ( (1:k)^(1+2/d) - (0:(k-1))^(1+2/d)  ))
@@ -121,8 +136,8 @@ optKernel <- function(k, d=1){
 
 kknn <-  function (formula = formula(train), train, test, na.action=na.omit(), 
                    k = 7, distance = 2, kernel = "optimal", ykernel = NULL, 
-                   scale=TRUE, contrasts=c('unordered'="contr.dummy", 
-                                           ordered="contr.ordinal")) 
+                   scale=TRUE, contrasts = c(unordered = kknn::contr.dummy,
+                                             ordered = kknn::contr.ordinal))
 {
     if(is.null(ykernel)) ykernel <- 0
 
@@ -144,8 +159,6 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(),
                                   "gaussian", "rank", "optimal"), FALSE)
     ca <- match.call()
     response <- NULL
-    old.contrasts <- getOption('contrasts')
-    options(contrasts=contrasts)
 
     formula <- as.formula(formula)
 
@@ -170,8 +183,9 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(),
     if(distance<=0)stop('distance must >0')
     if(k<=0)stop('k must >0')
 
-    learn <- model.matrix(mt, mf)
-    valid <- model.matrix(mt2,test)
+    contrasts.arg <- getContrastsArg(mt, contrasts)
+    learn <- model.matrix(mt, mf, contrasts.arg = contrasts.arg)
+    valid <- model.matrix(mt2,test, contrasts.arg = contrasts.arg)
 
     m <- dim(learn)[1]
     p <- dim(valid)[1]
@@ -302,7 +316,6 @@ if (response=="ordinal") {
 	}
 	if(response=="continuous") fit <- rowSums(W*CL)/pmax(rowSums(W), 1e-6) 
     #fit <- rowSums(W*CL)/sapply(rowSums(W),'max',1e-6) 
-    options('contrasts'=old.contrasts)	
 	
     result <- list(fitted.values=fit, CL=CL, W=W, D=D, C=C, prob=weightClass, 
                    response=response, distance=distance, call=ca, terms=mt)	
@@ -426,18 +439,7 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
     y <- model.response(mf)
     cl <- model.response(mf)
     
-    dataClasses <- attr(mt, "dataClasses")
-    unorderedVariables <- names(dataClasses[dataClasses %in% c("factor", "character")])
-    orderedVariables   <- names(dataClasses[dataClasses %in% c("ordered")])
-    
-    if (length(unorderedVariables) == 0 && length(orderedVariables) == 0) {
-      contrasts.arg <- NULL
-    } else {
-      contrasts.arg <- list()
-      contrasts.arg[unorderedVariables] <- list(contrasts[["unordered"]])
-      contrasts.arg[orderedVariables]   <- list(contrasts[["ordered"]])
-    }
-    
+    contrasts.arg <- getContrastsArg(mt, contrasts)
     mm.data <- model.matrix(mt, mf, contrasts.arg = contrasts.arg)
     p <- m <- dim(mm.data)[1]
     q <- dim(mm.data)[2]
