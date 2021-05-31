@@ -11,8 +11,8 @@
 }
 \usage{
 train.kknn(formula, data, kmax = 11, ks = NULL, distance = 2, kernel = "optimal",
-	ykernel = NULL, scale = TRUE, contrasts = c('unordered' = "contr.dummy",
-	ordered = "contr.ordinal"), ...)
+	ykernel = NULL, scale = TRUE, contrasts = c(unordered = kknn::contr.dummy,
+	ordered = kknn::contr.ordinal), ...)
 cv.kknn(formula, data, kcv = 10, ...)
 }
 \arguments{

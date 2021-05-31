@@ -15,7 +15,7 @@ In addition even ordinal and continuous variables can be predicted.
 \usage{
 kknn(formula = formula(train), train, test, na.action = na.omit(), 
 	k = 7, distance = 2, kernel = "optimal", ykernel = NULL, scale=TRUE,
-	contrasts = c('unordered' = "contr.dummy", ordered = "contr.ordinal"))
+	contrasts = c(unordered = kknn::contr.dummy, ordered = kknn::contr.ordinal))
 kknn.dist(learn, valid, k = 10, distance = 2)     
 }
 \arguments{
