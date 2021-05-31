@@ -4,4 +4,4 @@
 ^pkgdown$
 ^_pkgdown\.yml$
 ^\.github$
-^\.TODO
+TODO
