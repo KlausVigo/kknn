@@ -45,7 +45,7 @@ Analysis and Machine Intelligence}, \bold{22 (8)}, 888--905
 }
 \author{ Klaus P. Schliep \email{klaus.schliep@gmail.com}}
 \seealso{
-\code{\link{kknn}}, \code{\link{arpack}}, \code{\link{kmeans}}
+\code{\link{kknn}}, \code{\link[igraph]{arpack}}, \code{\link{kmeans}}
 }
 \examples{
 data(iris)
