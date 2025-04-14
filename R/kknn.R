@@ -285,15 +285,15 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(),
 
     Euclid <- FALSE
     if(distance==2) Euclid <- TRUE
-    if(Euclid) dmtmp <- .C("dmEuclid", as.double(learn), as.double(valid), 
+    if(Euclid) dmtmp <- .C(dmEuclid, as.double(learn), as.double(valid), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm=double((k+1L) * p), cl=integer((k+1L) * p), k=as.integer(k+1), 
-        as.double(we), PACKAGE='kknn')
+        as.double(we))
 
-    else dmtmp <- .C("dm", as.double(learn), as.double(valid), 
+    else dmtmp <- .C(dm, as.double(learn), as.double(valid), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm=double((k+1L) * p), cl=integer((k+1L) * p), k=as.integer(k+1), 
-        as.double(distance),as.double(we), PACKAGE='kknn')
+        as.double(distance),as.double(we))
     
     D <- matrix(dmtmp$dm, nrow = p, ncol = k + 1)
     C <- matrix(dmtmp$cl, nrow = p, ncol = k + 1)
@@ -424,6 +424,10 @@ kknn.dist <- function(learn, valid, k = 10, distance = 2)
 }  
 
 
+#' @param x an object used to select a method.
+#' @param digits minimal number of significant digits.
+#' @param ... further arguments passed to or from other methods.
+#' @rdname kknn
 #' @export
 print.kknn <- function(x, digits = max(3, getOption("digits") - 3), ...) 
 {
@@ -432,6 +436,7 @@ print.kknn <- function(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 
+#' @rdname kknn
 #' @export
 summary.kknn <- function(object, ...)
 {
@@ -445,6 +450,10 @@ summary.kknn <- function(object, ...)
 }
 
 
+#' @rdname kknn
+#' @param object a model object for which prediction is desired.
+#' @param type defines the output, 'raw' returns the estimates, 'prob' returns
+#' a matrix containing the proportions of each class. 
 #' @export
 predict.kknn <- function(object, type = c("raw", "prob"), ...) 
 { 
@@ -469,6 +478,10 @@ predict.kknn <- function(object, type = c("raw", "prob"), ...)
 
 
 #' @importFrom stats formula predict terms
+#' @param object a model object for which prediction is desired.
+#' @param newdata A data frame in which to look for variables with which to 
+#' predict.
+#' @rdname train.kknn
 #' @export
 predict.train.kknn <- function (object, newdata, ...) 
 {
@@ -653,15 +666,15 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
     
     kmax2 <- kmax + 2L
     if(kmax2 > m) kmax2 <- m
-    if(Euclid) dmtmp <- .C("dmEuclid", as.double(mm.data), as.double(mm.data), 
+    if(Euclid) dmtmp <- .C(dmEuclid, as.double(mm.data), as.double(mm.data), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm = double((kmax2) * p), cl = integer(kmax2 * p), 
-        k = as.integer(kmax2), as.double(we), PACKAGE = "kknn")
-    else dmtmp <- .C("dm", as.double(mm.data), as.double(mm.data), 
+        k = as.integer(kmax2), as.double(we))
+    else dmtmp <- .C(dm, as.double(mm.data), as.double(mm.data), 
         as.integer(m), as.integer(p), as.integer(q), 
         dm = double(kmax2 * p), cl = integer(kmax2 * p), 
         k = as.integer(kmax2), as.double(distance), 
-        as.double(we), PACKAGE = "kknn")
+        as.double(we))
     D <- matrix(dmtmp$dm, nrow = p, ncol = kmax2)
     C <- matrix(dmtmp$cl, nrow = p, ncol = kmax2)
     C <- C + 1
@@ -791,6 +804,7 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
 }
 
 
+#' @rdname train.kknn
 #' @export
 print.train.kknn <- function(x, ...)
 {
@@ -811,6 +825,7 @@ print.train.kknn <- function(x, ...)
 }
 
 
+#' @rdname train.kknn
 #' @export
 summary.train.kknn <- function(object, ...)
 {

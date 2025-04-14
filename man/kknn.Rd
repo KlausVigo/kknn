@@ -22,6 +22,12 @@ kknn(
 )
 
 kknn.dist(learn, valid, k = 10, distance = 2)
+
+\method{print}{kknn}(x, digits = max(3, getOption("digits") - 3), ...)
+
+\method{summary}{kknn}(object, ...)
+
+\method{predict}{kknn}(object, type = c("raw", "prob"), ...)
 }
 \arguments{
 \item{formula}{A formula object.}
@@ -53,6 +59,17 @@ to use.}
 \item{learn}{Matrix or data frame of training set cases.}
 
 \item{valid}{Matrix or data frame of test set cases.}
+
+\item{x}{an object used to select a method.}
+
+\item{digits}{minimal number of significant digits.}
+
+\item{...}{further arguments passed to or from other methods.}
+
+\item{object}{a model object for which prediction is desired.}
+
+\item{type}{defines the output, 'raw' returns the estimates, 'prob' returns
+a matrix containing the proportions of each class.}
 }
 \value{
 \code{kknn} returns a list-object of class \code{kknn} including the
