@@ -1,10 +1,3 @@
-.onLoad  <- function(libname, pkgname) {
-    library.dynam ("kknn", pkgname, libname)
-}
-
-
-
-
 #' Contrast Matrices
 #' 
 #' Returns a matrix of contrasts.
@@ -50,6 +43,7 @@ contr.dummy <- function (n, contrasts = TRUE)
 }
 
 
+#' @export
 contr.ordinal <- function (n, contrasts = TRUE) 
 {
     if (length(n) <= 1) {
@@ -65,6 +59,7 @@ contr.ordinal <- function (n, contrasts = TRUE)
 }
 
 
+#' @export
 contr.metric <- function(n, contrasts = TRUE) 
 {	
     if (length(n) <= 1) {
@@ -151,6 +146,8 @@ optKernel <- function(k, d=1){
 #' of response variable, one of \emph{continuous}, \emph{nominal} or
 #' \emph{ordinal}.} \item{distance}{Parameter of Minkowski distance.}
 #' \item{call}{The matched call.} \item{terms}{The 'terms' object used.}
+#' @importFrom stats as.formula dbeta delete.response dnorm na.omit model.frame 
+#' model.response model.matrix qnorm sd
 #' @author Klaus P. Schliep \email{klaus.schliep@@gmail.com} \cr Klaus
 #' Hechenbichler
 #' @seealso \code{\link[kknn]{train.kknn}}
@@ -197,6 +194,7 @@ optKernel <- function(k, d=1){
 #' 	kernel = c("triangular", "rectangular", "epanechnikov", "optimal"), distance = 2))
 #' table(predict(fit.train2, ionosphere.valid), ionosphere.valid$class)
 #' 
+#' @rdname kknn
 #' @export kknn
 kknn <-  function (formula = formula(train), train, test, na.action=na.omit(), 
                    k = 7, distance = 2, kernel = "optimal", ykernel = NULL, 
@@ -392,6 +390,8 @@ if (response=="ordinal") {
 
 # valid=NULL fuer leave one out?
 # include in kknn, train.kknn? 
+#' @rdname kknn
+#' @export
 kknn.dist <- function(learn, valid, k = 10, distance = 2) 
 {
     m <- dim(learn)[1]
@@ -424,7 +424,7 @@ kknn.dist <- function(learn, valid, k = 10, distance = 2)
 }  
 
 
-
+#' @export
 print.kknn <- function(x, digits = max(3, getOption("digits") - 3), ...) 
 {
     cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
@@ -432,7 +432,7 @@ print.kknn <- function(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 
-
+#' @export
 summary.kknn <- function(object, ...)
 {
 
@@ -445,6 +445,7 @@ summary.kknn <- function(object, ...)
 }
 
 
+#' @export
 predict.kknn <- function(object, type = c("raw", "prob"), ...) 
 { 
     call <- object$call
@@ -467,6 +468,8 @@ predict.kknn <- function(object, type = c("raw", "prob"), ...)
 }
 
 
+#' @importFrom stats formula predict terms
+#' @export
 predict.train.kknn <- function (object, newdata, ...) 
 {
     if (missing(newdata)) 
@@ -560,7 +563,7 @@ predict.train.kknn <- function (object, newdata, ...)
 #' plot(fit.glass1)
 #' plot(fit.glass2)
 #' 
-#' 
+#' @rdname train.kknn
 #' @export train.kknn
 train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2, 
                         kernel = "optimal", ykernel = NULL, scale=TRUE, 
@@ -788,6 +791,7 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
 }
 
 
+#' @export
 print.train.kknn <- function(x, ...)
 {
 	cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
@@ -807,6 +811,7 @@ print.train.kknn <- function(x, ...)
 }
 
 
+#' @export
 summary.train.kknn <- function(object, ...)
 {
 	cat("\nCall:\n", deparse(object$call), "\n\n", sep = "")
@@ -826,6 +831,10 @@ summary.train.kknn <- function(object, ...)
 }
 
 
+#' @importFrom graphics matplot legend par xinch yinch
+#' @param x an object of class \code{train.kknn}
+#' @rdname train.kknn
+#' @export
 plot.train.kknn <-function(x,...){
 	if(x$response=='continuous'){		
 		legend.text <- colnames(x$MEAN.ABS)
@@ -857,6 +866,8 @@ plot.train.kknn <-function(x,...){
 }
 
 
+#' @rdname train.kknn
+#' @export
 cv.kknn <- function(formula, data, kcv = 10, ...)
 {
   mf <- model.frame(formula, data=data) 

@@ -117,6 +117,9 @@ AUC <- function(y){
 #' @param gmax maximal number of connected components.
 #' @param x an object of class \code{specClust}
 #' @param \dots Further arguments passed to or from other methods.
+#' @importFrom Matrix Matrix sparseMatrix rowSums Diagonal
+#' @importFrom igraph graph decompose arpack
+#' @importFrom stats kmeans rnorm
 #' @return \code{specClust} returns a kmeans object or in case of k being a
 #' vector a list of kmeans objects.
 #' @author Klaus P. Schliep \email{klaus.schliep@@gmail.com}
@@ -146,6 +149,7 @@ AUC <- function(y){
 #' pairs(iris[1:4], pch = pcol, col = c("green", "red", "blue")[cl$cluster])
 #' table(iris[,5], cl$cluster)
 #' 
+#' @rdname specClust
 #' @export specClust
 specClust <- function (data, centers=NULL, nn = 7, method = "symmetric", 
                        gmax=NULL, ...) 
@@ -230,6 +234,9 @@ specClust <- function (data, centers=NULL, nn = 7, method = "symmetric",
 }
 
 
+#' @rdname specClust
+#' @importFrom graphics abline
+#' @export
 plot.specClust <- function(x, ...){
     plot(x$eigenvalue, xlab="# clusters", ylab="Eigen values", ...)
     abline(v=max(x$cluster), col="red")

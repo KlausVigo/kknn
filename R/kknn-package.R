@@ -103,8 +103,9 @@ NULL
 #' 
 #' Hechenbichler K. (2005) \emph{Ensemble-Techniken und ordinale
 #' Klassifikation}, PhD-thesis
-#' @keywords package
-NULL
+#' @useDynLib kknn, .registration = TRUE
+#' @keywords internal
+"_PACKAGE"
 
 
 
