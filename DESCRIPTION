@@ -1,19 +1,27 @@
 Package: kknn
 Title: Weighted k-Nearest Neighbors
-Version: 1.4.0
+Version: 1.4.0.1
 Authors@R: c(
-    person("Klaus", "Schliep", email = "klaus.schliep@gmail.com", role = c("aut", "cre")),
+    person("Klaus", "Schliep", , "klaus.schliep@gmail.com", role = c("aut", "cre")),
     person("Klaus", "Hechenbichler", role = "aut"),
-    person("Antoine", "Lizee", email = "antoine.lizee@gmail.com", role = "ctb"))
-Description: Weighted k-Nearest Neighbors for Classification, Regression and Clustering.
-Depends: R (>= 2.10)
-Imports: igraph (>= 1.0), Matrix, stats, graphics
-Suggests: tinytest
-ByteCompile: TRUE
+    person("Antoine", "Lizee", , "antoine.lizee@gmail.com", role = "ctb")
+  )
+Description: Weighted k-Nearest Neighbors for Classification, Regression
+    and Clustering.
 License: GPL (>= 2)
-NeedsCompilation: yes
 URL: https://github.com/KlausVigo/kknn
 BugReports: https://github.com/KlausVigo/kknn/issues
+Depends: 
+    R (>= 3.5)
+Imports: 
+    graphics,
+    igraph (>= 1.0),
+    Matrix,
+    stats
+Suggests:
+    tinytest
+ByteCompile: TRUE
 Encoding: UTF-8
+NeedsCompilation: yes
 Repository: CRAN
 RoxygenNote: 7.3.2
