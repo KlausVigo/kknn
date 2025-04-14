@@ -23,10 +23,10 @@ mydist <- function(data, k=20, distance = 2){
     data <- cbind(data, rnorm(m, sd=1e-6))
     q <- dim(data)[2]
     k1 <- k+1L
-    dmtmp <- .C("dmEuclid", as.double(data), as.double(data), 
+    dmtmp <- .C(dmEuclid, as.double(data), as.double(data), 
         as.integer(m), as.integer(m), as.integer(q), dm = double(m*k1), 
         cl = integer(m*k1), k = as.integer(k1), 
-        as.double(rep(1,q)), PACKAGE = "kknn")
+        as.double(rep(1,q)))
     D <- matrix(dmtmp$dm, nrow = m, ncol = k1)[,-1, drop=FALSE]
     C <- matrix(dmtmp$cl + 1L, nrow = m, ncol = k1)[,-1, drop=FALSE]
     list(D, C)
