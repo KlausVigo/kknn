@@ -59,7 +59,7 @@ Samworth, R.J. (2012) \emph{Optimal weighted nearest neighbour classifiers.} Ann
 (avaialble from \url{http://www.statslab.cam.ac.uk/~rjs57/Research.html}) 
 }
 \author{ Klaus P. Schliep \email{klaus.schliep@gmail.com} }
-\seealso{ \code{\link[kknn]{kknn}} and \code{\link[kknn]{simulation}} }
+\seealso{ \code{\link[kknn]{kknn}} }
 \examples{
 library(kknn)
 \dontrun{
