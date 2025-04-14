@@ -3,57 +3,6 @@
 }
 
 
-simulation <- function(formula, data, runs = 10, train = TRUE, k = 11, ...)
-{
-   .Deprecated("train.kknn or cv.kknn", "kknn", old="simulation")
-   mf <- model.frame(formula, data=data)
-   y <- model.response(mf)
-   MISCLASS <- numeric(runs)
-   MEAN.ABS <- numeric(runs)
-   MEAN.SQU <- numeric(runs)
-   for(i in 1:runs)
-     {
-     set.seed(i)
-     m <- dim(data)[1]
-     val <- sample(1:m, size=round(m/3), replace=FALSE, prob=rep(1/m, m)) 
-     learn <- data[-val,]
-     valid <- data[val,]
-     ytmp <- y[val]
-     
-     if(train){
-     	fit <- train.kknn(formula , learn, kmax = k, ...)
-     	pred <- predict(fit, valid)}
-     if(!train) pred <- predict(kknn(formula, learn, valid, k = k, ...))
-     if(is.factor(y)) MISCLASS[i]<-sum(ytmp != pred)/dim(valid)[1]
-     if(is.numeric(y) | is.ordered(y)) MEAN.ABS[i]<-sum(abs(as.numeric(ytmp) -
-		as.numeric(pred)))/dim(valid)[1]
-     if(is.numeric(y) | is.ordered(y)) MEAN.SQU[i]<-sum((as.numeric(ytmp) -
-		as.numeric(pred))^2)/dim(valid)[1]
-     }  
-   if(is.numeric(y)){ 
-   		result <- matrix(data=c(mean(MEAN.ABS), sd(MEAN.ABS),
-		mean(MEAN.SQU), sd(MEAN.SQU)), nrow=2, ncol=2)
-		colnames(result)<-c("absolute distance", "squared distance")
-		rownames(result)<-c("mean", "sd")                         
-   }
-   if(is.ordered(y)){ 
-   		result<-matrix(data=c(mean(MISCLASS), sd(MISCLASS), 
-		mean(MEAN.ABS), sd(MEAN.ABS),
-		mean(MEAN.SQU), sd(MEAN.SQU)), 
-		nrow=2, ncol=3)
-		colnames(result) <- c("misclassification","absolute distance", 
-		                    "squared distance")
-		rownames(result) <- c("Mean", "sd")
-		} 
-   if(is.factor(y) & !is.ordered(y)){ 
-		result<-matrix(data=c(mean(MISCLASS), sd(MISCLASS)),	nrow=2, ncol=1)   
-   		colnames(result)<-"misclassification"
-   		rownames(result)<-c("mean", "sd")
-   		} 
-   result
-}
-
-
 contr.dummy <- function (n, contrasts = TRUE) 
 {
     if (length(n) <= 1) {
