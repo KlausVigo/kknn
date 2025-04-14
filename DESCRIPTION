@@ -14,5 +14,6 @@ License: GPL (>= 2)
 NeedsCompilation: yes
 URL: https://github.com/KlausVigo/kknn
 BugReports: https://github.com/KlausVigo/kknn/issues
+Encoding: UTF-8
 Repository: CRAN
 RoxygenNote: 7.3.2

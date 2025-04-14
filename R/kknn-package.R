@@ -99,7 +99,7 @@ NULL
 #' @references Hechenbichler K. and Schliep K.P. (2004) \emph{Weighted
 #' k-Nearest-Neighbor Techniques and Ordinal Classification}, Discussion Paper
 #' 399, SFB 386, Ludwig-Maximilians University Munich
-#' (\url{https://doi.org/10.5282/ubm/epub.1769})
+#' (\doi{10.5282/ubm/epub.1769})
 #' 
 #' Hechenbichler K. (2005) \emph{Ensemble-Techniken und ordinale
 #' Klassifikation}, PhD-thesis
