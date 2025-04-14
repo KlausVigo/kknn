@@ -3,6 +3,38 @@
 }
 
 
+
+
+#' Contrast Matrices
+#' 
+#' Returns a matrix of contrasts.
+#' 
+#' \code{contr.dummy} is standard dummy-coding, \code{contr.metric} has the
+#' same effect like \code{as.numeric} (makes sense of course only for ordered
+#' variables).  \code{contr.ordinal} computes contrasts for ordinal variables.
+#' 
+#' @aliases contr.dummy contr.metric contr.ordinal
+#' @param n A vector containing levels of a factor, or the number of levels.
+#' @param contrasts A logical value indicating whether contrasts should be
+#' computed.
+#' @return A matrix with \emph{n} rows and \emph{n-1} columns for
+#' \code{contr.ordinal}, a matrix with \emph{n} rows and \emph{n} columns for
+#' \code{contr.dummy} and a vector of length \emph{n} for \code{contr.metric}.
+#' @author Klaus P. Schliep \email{klaus.schliep@@gmail.com}
+#' @seealso \code{\link[stats]{contrasts}},
+#' \code{\link[stats:contrast]{contr.poly}} and \code{\link[MASS]{contr.sdif}}
+#' @references Hechenbichler K. and Schliep K.P. (2004) \emph{Weighted
+#' k-Nearest-Neighbor Techniques and Ordinal Classification}, Discussion Paper
+#' 399, SFB 386, Ludwig-Maximilians University Munich
+#' (\doi{10.5282/ubm/epub.1769})
+#' @keywords classif design
+#' @examples
+#' 
+#' contr.metric(5)
+#' contr.ordinal(5)
+#' contr.dummy(5)
+#' 
+#' @export contr.dummy
 contr.dummy <- function (n, contrasts = TRUE) 
 {
     if (length(n) <= 1) {
@@ -68,6 +100,104 @@ optKernel <- function(k, d=1){
 }
 
 
+
+
+#' Weighted k-Nearest Neighbor Classifier
+#' 
+#' Performs k-nearest neighbor classification of a test set using a training
+#' set. For each row of the test set, the k nearest training set vectors
+#' (according to Minkowski distance) are found, and the classification is done
+#' via the maximum of summed kernel densities.  In addition even ordinal and
+#' continuous variables can be predicted.
+#' 
+#' This nearest neighbor method expands knn in several directions. First it can
+#' be used not only for classification, but also for regression and ordinal
+#' classification. Second it uses kernel functions to weight the neighbors
+#' according to their distances. In fact, not only kernel functions but every
+#' monotonic decreasing function \eqn{f(x) \forall x>0}{f(x) for all x>0} will
+#' work fine.
+#' 
+#' The number of neighbours used for the "optimal" kernel should be \eqn{ [
+#' (2(d+4)/(d+2))^(d/(d+4)) k ]}, where k is the number that would be used for
+#' unweighted knn classification, i.e. kernel="rectangular". This factor
+#' \eqn{(2(d+4)/(d+2))^(d/(d+4))} is between 1.2 and 2 (see Samworth (2012) for
+#' more details).
+#' 
+#' @aliases kknn print.kknn summary.kknn predict.kknn kknn.dist
+#' @param formula A formula object.
+#' @param train Matrix or data frame of training set cases.
+#' @param test Matrix or data frame of test set cases.
+#' @param learn Matrix or data frame of training set cases.
+#' @param valid Matrix or data frame of test set cases.
+#' @param na.action A function which indicates what should happen when the data
+#' contain 'NA's.
+#' @param k Number of neighbors considered.
+#' @param distance Parameter of Minkowski distance.
+#' @param kernel Kernel to use. Possible choices are "rectangular" (which is
+#' standard unweighted knn), "triangular", "epanechnikov" (or beta(2,2)),
+#' "biweight" (or beta(3,3)), "triweight" (or beta(4,4)), "cos", "inv",
+#' "gaussian", "rank" and "optimal".
+#' @param ykernel Window width of an y-kernel, especially for prediction of
+#' ordinal classes.
+#' @param scale logical, scale variable to have equal sd.
+#' @param contrasts A vector containing the 'unordered' and 'ordered' contrasts
+#' to use.
+#' @return \code{kknn} returns a list-object of class \code{kknn} including the
+#' components \item{fitted.values}{Vector of predictions.} \item{CL}{Matrix of
+#' classes of the k nearest neighbors.} \item{W}{Matrix of weights of the k
+#' nearest neighbors.} \item{D}{Matrix of distances of the k nearest
+#' neighbors.} \item{C}{Matrix of indices of the k nearest neighbors.}
+#' \item{prob}{Matrix of predicted class probabilities.} \item{response}{Type
+#' of response variable, one of \emph{continuous}, \emph{nominal} or
+#' \emph{ordinal}.} \item{distance}{Parameter of Minkowski distance.}
+#' \item{call}{The matched call.} \item{terms}{The 'terms' object used.}
+#' @author Klaus P. Schliep \email{klaus.schliep@@gmail.com} \cr Klaus
+#' Hechenbichler
+#' @seealso \code{\link[kknn]{train.kknn}}
+#' @references Hechenbichler K. and Schliep K.P. (2004) \emph{Weighted
+#' k-Nearest-Neighbor Techniques and Ordinal Classification}, Discussion Paper
+#' 399, SFB 386, Ludwig-Maximilians University Munich
+#' (\doi{10.5282/ubm/epub.1769})
+#' 
+#' Hechenbichler K. (2005) \emph{Ensemble-Techniken und ordinale
+#' Klassifikation}, PhD-thesis
+#' 
+#' Samworth, R.J. (2012) \emph{Optimal weighted nearest neighbour classifiers.}
+#' Annals of Statistics, 40, 2733-2763. (avaialble from
+#' \url{http://www.statslab.cam.ac.uk/~rjs57/Research.html})
+#' @keywords classif
+#' @examples
+#' 
+#' library(kknn)
+#' 
+#' data(iris)
+#' m <- dim(iris)[1]
+#' val <- sample(1:m, size = round(m/3), replace = FALSE, 
+#' 	prob = rep(1/m, m)) 
+#' iris.learn <- iris[-val,]
+#' iris.valid <- iris[val,]
+#' iris.kknn <- kknn(Species~., iris.learn, iris.valid, distance = 1,
+#' 	kernel = "triangular")
+#' summary(iris.kknn)
+#' fit <- fitted(iris.kknn)
+#' table(iris.valid$Species, fit)
+#' pcol <- as.character(as.numeric(iris.valid$Species))
+#' pairs(iris.valid[1:4], pch = pcol, col = c("green3", "red")
+#' 	[(iris.valid$Species != fit)+1])
+#' 
+#' data(ionosphere)
+#' ionosphere.learn <- ionosphere[1:200,]
+#' ionosphere.valid <- ionosphere[-c(1:200),]
+#' fit.kknn <- kknn(class ~ ., ionosphere.learn, ionosphere.valid)
+#' table(ionosphere.valid$class, fit.kknn$fit)
+#' (fit.train1 <- train.kknn(class ~ ., ionosphere.learn, kmax = 15, 
+#' 	kernel = c("triangular", "rectangular", "epanechnikov", "optimal"), distance = 1))
+#' table(predict(fit.train1, ionosphere.valid), ionosphere.valid$class)
+#' (fit.train2 <- train.kknn(class ~ ., ionosphere.learn, kmax = 15, 
+#' 	kernel = c("triangular", "rectangular", "epanechnikov", "optimal"), distance = 2))
+#' table(predict(fit.train2, ionosphere.valid), ionosphere.valid$class)
+#' 
+#' @export kknn
 kknn <-  function (formula = formula(train), train, test, na.action=na.omit(), 
                    k = 7, distance = 2, kernel = "optimal", ykernel = NULL, 
                    scale=TRUE, contrasts=c('unordered'="contr.dummy", 
@@ -348,6 +478,90 @@ predict.train.kknn <- function (object, newdata, ...)
 }
 
 
+
+
+#' Training kknn
+#' 
+#' Training of kknn method via leave-one-out (\code{train.kknn}) or k-fold
+#' (\code{cv.kknn}) crossvalidation.
+#' 
+#' \code{train.kknn} performs leave-one-out crossvalidation and is
+#' computatioanlly very efficient. \code{cv.kknn} performs k-fold
+#' crossvalidation and is generally slower and does not yet contain the test of
+#' different models yet.
+#' 
+#' @aliases train.kknn plot.train.kknn print.train.kknn predict.train.kknn
+#' summary.train.kknn cv.kknn
+#' @param formula A formula object.
+#' @param data Matrix or data frame.
+#' @param kmax Maximum number of k, if \code{ks} is not specified.
+#' @param ks A vector specifying values of k. If not null, this takes
+#' precedence over \code{kmax}.
+#' @param distance Parameter of Minkowski distance.
+#' @param kernel Kernel to use. Possible choices are "rectangular" (which is
+#' standard unweighted knn), "triangular", "epanechnikov" (or beta(2,2)),
+#' "biweight" (or beta(3,3)), "triweight" (or beta(4,4)), "cos", "inv",
+#' "gaussian" and "optimal".
+#' @param ykernel Window width of an y-kernel, especially for prediction of
+#' ordinal classes.
+#' @param scale logical, scale variable to have equal sd.
+#' @param contrasts A vector containing the 'unordered' and 'ordered' contrasts
+#' to use.
+#' @param \dots Further arguments passed to or from other methods.
+#' @param kcv Number of partitions for k-fold cross validation.
+#' @return \code{train.kknn} returns a list-object of class \code{train.kknn}
+#' including the components.  \item{MISCLASS}{Matrix of misclassification
+#' errors.} \item{MEAN.ABS}{Matrix of mean absolute errors.}
+#' \item{MEAN.SQU}{Matrix of mean squared errors.} \item{fitted.values}{List of
+#' predictions for all combinations of kernel and k.}
+#' \item{best.parameters}{List containing the best parameter value for kernel
+#' and k.} \item{response}{Type of response variable, one of \emph{continuous},
+#' \emph{nominal} or \emph{ordinal}.} \item{distance}{Parameter of Minkowski
+#' distance.} \item{call}{The matched call.} \item{terms}{The 'terms' object
+#' used.}
+#' @author Klaus P. Schliep \email{klaus.schliep@@gmail.com}
+#' @seealso \code{\link[kknn]{kknn}}
+#' @references Hechenbichler K. and Schliep K.P. (2004) \emph{Weighted
+#' k-Nearest-Neighbor Techniques and Ordinal Classification}, Discussion Paper
+#' 399, SFB 386, Ludwig-Maximilians University Munich
+#' (\doi{10.5282/ubm/epub.1769})
+#' 
+#' Hechenbichler K. (2005) \emph{Ensemble-Techniken und ordinale
+#' Klassifikation}, PhD-thesis
+#' 
+#' Samworth, R.J. (2012) \emph{Optimal weighted nearest neighbour classifiers.}
+#' Annals of Statistics, 40, 2733-2763. (avaialble from
+#' \url{http://www.statslab.cam.ac.uk/~rjs57/Research.html})
+#' @keywords classif
+#' @examples
+#' 
+#' library(kknn)
+#' \dontrun{
+#' data(miete)
+#' (train.con <- train.kknn(nmqm ~ wfl + bjkat + zh, data = miete, 
+#' 	kmax = 25, kernel = c("rectangular", "triangular", "epanechnikov",
+#' 	"gaussian", "rank", "optimal")))
+#' plot(train.con)
+#' (train.ord <- train.kknn(wflkat ~ nm + bjkat + zh, miete, kmax = 25,
+#'  	kernel = c("rectangular", "triangular", "epanechnikov", "gaussian", 
+#'  	"rank", "optimal")))
+#' plot(train.ord)
+#' (train.nom <- train.kknn(zh ~ wfl + bjkat + nmqm, miete, kmax = 25, 
+#' 	kernel = c("rectangular", "triangular", "epanechnikov", "gaussian", 
+#' 	"rank", "optimal")))
+#' plot(train.nom)
+#' }
+#' data(glass)
+#' glass <- glass[,-1]
+#' (fit.glass1 <- train.kknn(Type ~ ., glass, kmax = 15, kernel = 
+#' 	c("triangular", "rectangular", "epanechnikov", "optimal"), distance = 1))
+#' (fit.glass2 <- train.kknn(Type ~ ., glass, kmax = 15, kernel = 
+#' 	c("triangular", "rectangular", "epanechnikov", "optimal"), distance = 2))
+#' plot(fit.glass1)
+#' plot(fit.glass2)
+#' 
+#' 
+#' @export train.kknn
 train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2, 
                         kernel = "optimal", ykernel = NULL, scale=TRUE, 
     contrasts = c(unordered = "contr.dummy", ordered = "contr.ordinal"), ...) 
@@ -671,8 +885,8 @@ cv.kknn <- function(formula, data, kcv = 10, ...)
 
 
 prepare.Discrete <- function(data){
-  if(class(data)=="factor")return(as.matrix(unclass(data)))
-  if(class(data)=="data.frame")
+  if(inherits(data, "factor")) return(as.matrix(unclass(data)))
+  if(inherits(data, "data.frame")) 
     return(as.matrix(data.frame(lapply(data,unclass))))
 }
 

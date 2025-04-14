@@ -1,3 +1,14 @@
+            CHANGES IN KKNN VERSION 1.4.0
+
+OTHER CHANGES
+
+    o removed deprecated function simulation
+    
+    o man pages are created with roxygen2 now
+    
+    o some bug fixes 
+
+
             CHANGES IN KKNN VERSION 1.3.2
 
 OTHER CHANGES
