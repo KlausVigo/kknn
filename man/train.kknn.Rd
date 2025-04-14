@@ -86,7 +86,7 @@ Training of kknn method via leave-one-out (\code{train.kknn}) or k-fold
 }
 \details{
 \code{train.kknn} performs leave-one-out crossvalidation and is
-computatioanlly very efficient. \code{cv.kknn} performs k-fold
+computationally very efficient. \code{cv.kknn} performs k-fold
 crossvalidation and is generally slower and does not yet contain the test of
 different models yet.
 }

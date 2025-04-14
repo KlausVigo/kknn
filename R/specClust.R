@@ -96,13 +96,13 @@ AUC <- function(y){
 #' 
 #' Spectral clustering based on k-nearest neighbor graph.
 #' 
-#' \code{specClust} alllows to estimate several popular spectral clustering
+#' \code{specClust} allows to estimate several popular spectral clustering
 #' algorithms, for an overview see von Luxburg (2007).
 #' 
 #' The Laplacian is constructed from a from nearest neighbors and there are
 #' several kernels available.  The eigenvalues and eigenvectors are computed
 #' using the binding in igraph to arpack.  This should ensure that this
-#' algorithm is also feasable for larger datasets as the the the distances used
+#' algorithm is also feasible for larger datasets as the the the distances used
 #' have dimension n*m, where n is the number of observations and m the number
 #' of nearest neighbors. The Laplacian is sparse and has roughly n*m elements
 #' and only k eigenvectors are computed, where k is the number of centers.
@@ -110,7 +110,7 @@ AUC <- function(y){
 #' @aliases specClust plot.specClust
 #' @param data Matrix or data frame.
 #' @param centers number of clusters to estimate, if NULL the number is chosen
-#' automatical.
+#' automatically.
 #' @param nn Number of neighbors considered.
 #' @param method Normalisation of the Laplacian ("none", "symmetric" or
 #' "random-walk").

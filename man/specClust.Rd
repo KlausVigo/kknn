@@ -13,7 +13,7 @@ specClust(data, centers = NULL, nn = 7, method = "symmetric", gmax = NULL, ...)
 \item{data}{Matrix or data frame.}
 
 \item{centers}{number of clusters to estimate, if NULL the number is chosen
-automatical.}
+automatically.}
 
 \item{nn}{Number of neighbors considered.}
 
@@ -34,13 +34,13 @@ vector a list of kmeans objects.
 Spectral clustering based on k-nearest neighbor graph.
 }
 \details{
-\code{specClust} alllows to estimate several popular spectral clustering
+\code{specClust} allows to estimate several popular spectral clustering
 algorithms, for an overview see von Luxburg (2007).
 
 The Laplacian is constructed from a from nearest neighbors and there are
 several kernels available.  The eigenvalues and eigenvectors are computed
 using the binding in igraph to arpack.  This should ensure that this
-algorithm is also feasable for larger datasets as the the the distances used
+algorithm is also feasible for larger datasets as the the the distances used
 have dimension n*m, where n is the number of observations and m the number
 of nearest neighbors. The Laplacian is sparse and has roughly n*m elements
 and only k eigenvectors are computed, where k is the number of centers.
