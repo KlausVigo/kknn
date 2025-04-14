@@ -27,7 +27,7 @@
 #' 4PN \item Donor: Vina Spiehler, Ph.D., DABFT, Diagnostic Products
 #' Corporation } The data have been taken from the UCI Machine Learning
 #' Database Repository \cr
-#' \url{http://www.ics.uci.edu/~mlearn/MLRepository.html} \cr and were
+#' \url{https://archive.ics.uci.edu/} \cr and were
 #' converted to R format by \email{klaus.schliep@gmail.com}.
 #' @keywords datasets
 #' @examples
@@ -69,7 +69,7 @@ NULL
 #' Hopkins Road, Laurel, MD 20723
 #' 
 #' The data have been taken from the UCI Machine Learning Database Repository
-#' \cr \url{http://www.ics.uci.edu/~mlearn/MLRepository.html}\cr and were
+#' \cr \url{https://archive.ics.uci.edu/}\cr and were
 #' converted to R format by \email{klaus.schliep@gmail.com }.
 #' @keywords datasets
 #' @examples

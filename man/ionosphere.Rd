@@ -16,7 +16,7 @@ Physics Group, Applied Physics Laboratory, Johns Hopkins University, Johns
 Hopkins Road, Laurel, MD 20723
 
 The data have been taken from the UCI Machine Learning Database Repository
-\cr \url{http://www.ics.uci.edu/~mlearn/MLRepository.html}\cr and were
+\cr \url{https://archive.ics.uci.edu/}\cr and were
 converted to R format by \email{klaus.schliep@gmail.com }.
 }
 \description{
