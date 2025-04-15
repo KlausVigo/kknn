@@ -2,8 +2,8 @@
 [![CRAN Status Badge](http://www.r-pkg.org/badges/version/kknn)](https://cran.r-project.org/package=kknn)
 [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
 [![CRAN Downloads](http://cranlogs.r-pkg.org/badges/kknn)](https://cran.r-project.org/package=kknn)
-[![Research software impact](http://depsy.org/api/package/cran/kknn/badge.svg)](http://depsy.org/package/r/kknn)
 [![Codecov test coverage](https://codecov.io/gh/KlausVigo/kknn/branch/master/graph/badge.svg)](https://app.codecov.io/github/KlausVigo/kknn)
+[![R-CMD-check](https://github.com/KlausVigo/kknn/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/KlausVigo/kknn/actions/workflows/R-CMD-check.yaml)
 
 kknn
 ========================================================
