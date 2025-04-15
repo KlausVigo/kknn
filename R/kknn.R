@@ -74,27 +74,40 @@ contr.metric <- function(n, contrasts = TRUE)
 }
 
 
-
 contr.int <- function (n, contrasts = TRUE) 
 {
-    if (length(n) <= 1) {
-        if (is.numeric(n) && length(n) == 1 && n > 1) 
-            levels <- as.integer(1:n)
-        else stop("contrasts are not defined for 0 degrees of freedom")
-    }
-    else levels <- n
-    lenglev <- length(levels)
-    cont <- array(as.integer(1:lenglev), c(lenglev, 1), 
-                  list(levels, NULL))
-    cont
+  if (length(n) <= 1) {
+    if (is.numeric(n) && length(n) == 1 && n > 1) 
+      levels <- as.integer(1:n)
+    else stop("contrasts are not defined for 0 degrees of freedom")
+  }
+  else levels <- n
+  lenglev <- length(levels)
+  cont <- array(as.integer(1:lenglev), c(lenglev, 1), 
+                list(levels, NULL))
+  cont
+}
+
+
+
+get_contrasts <- function(mt, contrasts){
+  dataClasses <- attr(mt, "dataClasses")
+  unorderedVariables <- names(dataClasses[dataClasses %in% c("factor", "character")])
+  orderedVariables   <- names(dataClasses[dataClasses %in% c("ordered")])
+  if (length(unorderedVariables) == 0 && length(orderedVariables) == 0) {
+    contrasts.arg <- NULL
+  } else {
+    contrasts.arg <- list()
+    contrasts.arg[unorderedVariables] <- list(contrasts[["unordered"]])
+    contrasts.arg[orderedVariables]   <- list(contrasts[["ordered"]])
+  }
+  contrasts.arg
 }
 
 
 optKernel <- function(k, d=1){
    1/k*(1 + d/2 - d/(2*k^(2/d)) * ( (1:k)^(1+2/d) - (0:(k-1))^(1+2/d)  ))
 }
-
-
 
 
 #' Weighted k-Nearest Neighbor Classifier
@@ -160,7 +173,7 @@ optKernel <- function(k, d=1){
 #' Klassifikation}, PhD-thesis
 #' 
 #' Samworth, R.J. (2012) \emph{Optimal weighted nearest neighbour classifiers.}
-#' Annals of Statistics, 40, 2733-2763. (avaialble from
+#' Annals of Statistics, 40, 2733-2763. (available from
 #' \url{http://www.statslab.cam.ac.uk/~rjs57/Research.html})
 #' @keywords classif
 #' @examples
@@ -221,8 +234,8 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(),
                                   "gaussian", "rank", "optimal"), FALSE)
     ca <- match.call()
     response <- NULL
-    old.contrasts <- getOption('contrasts')
-    options(contrasts=contrasts)
+#    old.contrasts <- getOption('contrasts')
+#    options(contrasts=contrasts)
 
     formula <- as.formula(formula)
 
@@ -247,8 +260,10 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(),
     if(distance<=0)stop('distance must >0')
     if(k<=0)stop('k must >0')
 
-    learn <- model.matrix(mt, mf)
-    valid <- model.matrix(mt2,test)
+    contrasts.arg <- get_contrasts(mt, contrasts)  
+    
+    learn <- model.matrix(mt, mf, contrasts.arg=contrasts.arg)
+    valid <- model.matrix(mt2,test, contrasts.arg=contrasts.arg)
 
     m <- dim(learn)[1]
     p <- dim(valid)[1]
@@ -379,7 +394,7 @@ if (response=="ordinal") {
 	}
 	if(response=="continuous") fit <- rowSums(W*CL)/pmax(rowSums(W), 1e-6) 
     #fit <- rowSums(W*CL)/sapply(rowSums(W),'max',1e-6) 
-    options('contrasts'=old.contrasts)	
+#    options('contrasts'=old.contrasts)	
 	
     result <- list(fitted.values=fit, CL=CL, W=W, D=D, C=C, prob=weightClass, 
                    response=response, distance=distance, call=ca, terms=mt)	
@@ -604,9 +619,13 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
 
     y <- model.response(mf)
     cl <- model.response(mf)
-    old.contrasts <- getOption("contrasts")
-    options(contrasts = contrasts)
-    mm.data <- model.matrix(mt, mf)
+#    old.contrasts <- getOption("contrasts")
+#    options(contrasts = contrasts)
+    
+    contrasts.arg <- get_contrasts(mt, contrasts)  
+    
+    mm.data <- model.matrix(mt, mf, contrasts.arg=contrasts.arg)
+    
     p <- m <- dim(mm.data)[1]
     q <- dim(mm.data)[2]
     
@@ -793,7 +812,7 @@ train.kknn <- function (formula, data, kmax = 11, ks = NULL, distance = 2,
         best <- which(MEAN.SQU == min(MEAN.SQU), arr.ind = TRUE)
     best.parameters <- list(kernel = kernel[best[1, 2]], k = ks[best[1, 1]])
 
-    options('contrasts'=old.contrasts)
+#    options('contrasts'=old.contrasts)
     
     result <- list(MISCLASS = MISCLASS, MEAN.ABS = MEAN.ABS, 
                    MEAN.SQU= MEAN.SQU, fitted.values = P, 
