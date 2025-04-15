@@ -145,7 +145,7 @@ Hechenbichler K. (2005) \emph{Ensemble-Techniken und ordinale
 Klassifikation}, PhD-thesis
 
 Samworth, R.J. (2012) \emph{Optimal weighted nearest neighbour classifiers.}
-Annals of Statistics, 40, 2733-2763. (avaialble from
+Annals of Statistics, 40, 2733-2763. (available from
 \url{http://www.statslab.cam.ac.uk/~rjs57/Research.html})
 }
 \seealso{

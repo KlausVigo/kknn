@@ -82,12 +82,12 @@ used.}
 }
 \description{
 Training of kknn method via leave-one-out (\code{train.kknn}) or k-fold
-(\code{cv.kknn}) crossvalidation.
+(\code{cv.kknn}) cross-validation.
 }
 \details{
-\code{train.kknn} performs leave-one-out crossvalidation and is
+\code{train.kknn} performs leave-one-out cross-validation and is
 computationally very efficient. \code{cv.kknn} performs k-fold
-crossvalidation and is generally slower and does not yet contain the test of
+cross-validation and is generally slower and does not yet contain the test of
 different models yet.
 }
 \examples{
@@ -128,7 +128,7 @@ Hechenbichler K. (2005) \emph{Ensemble-Techniken und ordinale
 Klassifikation}, PhD-thesis
 
 Samworth, R.J. (2012) \emph{Optimal weighted nearest neighbour classifiers.}
-Annals of Statistics, 40, 2733-2763. (avaialble from
+Annals of Statistics, 40, 2733-2763. (available from
 \url{http://www.statslab.cam.ac.uk/~rjs57/Research.html})
 }
 \seealso{
