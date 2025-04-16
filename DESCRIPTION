@@ -1,6 +1,6 @@
 Package: kknn
 Title: Weighted k-Nearest Neighbors
-Version: 1.4.0
+Version: 1.4.0.1
 Authors@R: c(
     person("Klaus", "Schliep", , "klaus.schliep@gmail.com", role = c("aut", "cre")),
     person("Klaus", "Hechenbichler", role = "aut"),
