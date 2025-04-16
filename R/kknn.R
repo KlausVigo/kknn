@@ -241,8 +241,6 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(),
 
     mf <- model.frame(formula, data = train)    
     mt <- attr(mf, "terms")
-#reformulate(, intercept = FALSE
-    
     mt2 <- delete.response(mt)
     cl <- model.response(mf)
     d <- sum(attr(mt, "order"))
@@ -250,18 +248,17 @@ kknn <-  function (formula = formula(train), train, test, na.action=na.omit(),
     if(is.ordered(cl)) {
         response<-"ordinal"
         lev <- levels(cl)
-	}
+  	}
     if(is.numeric(cl)) response<-"continuous"
     if(is.factor(cl) & !is.ordered(cl)){
         response<-"nominal"
-	    lev <- levels(cl)
-	}
+	      lev <- levels(cl)
+	  }
 	
     if(distance<=0)stop('distance must >0')
     if(k<=0)stop('k must >0')
 
     contrasts.arg <- get_contrasts(mt, contrasts)  
-    
     learn <- model.matrix(mt, mf, contrasts.arg=contrasts.arg)
     valid <- model.matrix(mt2,test, contrasts.arg=contrasts.arg)
 
