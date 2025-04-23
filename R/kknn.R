@@ -91,7 +91,8 @@ contr.int <- function (n, contrasts = TRUE)
 
 
 get_contrasts <- function(mt, contrasts){
-  dataClasses <- attr(mt, "dataClasses")
+  yLocation <- attr(mt, "response")
+  dataClasses <- attr(mt, "dataClasses")[-yLocation]
   unorderedVariables <- names(dataClasses[dataClasses %in% c("factor", "character")])
   orderedVariables   <- names(dataClasses[dataClasses %in% c("ordered")])
   if (length(unorderedVariables) == 0 && length(orderedVariables) == 0) {
