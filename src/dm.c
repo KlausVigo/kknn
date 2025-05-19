@@ -39,8 +39,8 @@ void dm(double *learn, double *valid, int *n, int *m, int *p, double *dm, int *c
     kk = MIN(kk, *n);
     nn = MIN(2L*kk, *n);
 
-    cvec = (int *) R_alloc(nn, sizeof(int));
-    dvec = (double *) R_alloc(nn, sizeof(double));
+    cvec = (int *) R_alloc(nn+1L, sizeof(int));
+    dvec = (double *) R_alloc(nn+1L, sizeof(double));
 //    for(t=0;t<nn;t++) dvec[t]= BIG;
 
     for(j=0;j<(*m);j++){
