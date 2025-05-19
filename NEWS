@@ -1,3 +1,12 @@
+            CHANGES IN KKNN VERSION 1.4.1
+
+BUG FIXES
+
+    o bugfix to avoid valgrind error (Koen Derks)
+
+    o small bug fix by Max Kuhn
+
+
             CHANGES IN KKNN VERSION 1.4.0
 
 OTHER CHANGES
