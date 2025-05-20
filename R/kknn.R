@@ -902,11 +902,12 @@ plot.train.kknn <-function(x,...){
 #' @export
 cv.kknn <- function(formula, data, kcv = 10, ...)
 {
+  data <- data[sample(nrow(data)),]
   mf <- model.frame(formula, data=data) 
   # terms(formula, data = data) keine kopie der Daten?
   y <- model.response(mf)                 
   l <- length(y)    # nrow(data)                  
-  val<-sample(kcv, size=l, replace=TRUE) 
+  val <- cut(seq(1, nrow(data)), breaks = kcv, labels = FALSE)
   yhat <- numeric(l)
   for(i in 1:kcv){
     m <- dim(data)[1]
